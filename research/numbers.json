@@ -1,0 +1,1550 @@
+{
+  "meta": {
+    "generated": "2026-11-12",
+    "generator": "research/scripts/numbers_calc.py",
+    "units": {
+      "memGB": "ёмкость по спецификации NVIDIA (фактически ближе к GiB)",
+      "usableGiB": "memory.total из nvidia-smi / 1024 (GiB = 2^30 байт)",
+      "bwTBs": "TB/s, десятичные (10^12 байт/с)",
+      "tflops": "DENSE (без 2:4 sparsity), TFLOPS = 10^12 FLOP/s; null = формат не поддерживается тензорными ядрами",
+      "ridgeFlopsPerByte": "dense TFLOPS / (TB/s) = FLOPs на байт HBM",
+      "nvlinkGBs": "суммарно в обе стороны на GPU, как пишет NVIDIA; в одну сторону = половина",
+      "interconnects.GBs": "ГБ/с в ОДНУ сторону (10^9 байт/с); GBsBidirectional = сумма двух направлений",
+      "kvBytesPerToken": "байт на 1 токен контекста на все слои (K и V), без TP/дублирования",
+      "paramsB": "миллиарды параметров (10^9), посчитано из config.json",
+      "activeParamsB": "как в карточке модели (Qwen/DeepSeek считают с эмбеддингами, OpenAI — без таблицы эмбеддингов); activeMatmulParamsB — то, что реально умножается на каждый токен (для FLOPs = 2*N*tokens)",
+      "kvCacheValuesPerLayer": "сколько чисел на токен на слой лежит в KV-кэше; kvBytesPerToken = layers * kvCacheValuesPerLayer * bytesPerElement (для swa-hybrid — см. slidingWindow.formula)"
+    },
+    "conventions": "GeForce: BF16/FP8 с FP32-accumulate. Blackwell FP4 = NVFP4 dense."
+  },
+  "dtypes": [
+    {
+      "id": "fp32",
+      "bytes": 4,
+      "notes": "accumulate / master weights"
+    },
+    {
+      "id": "bf16",
+      "bytes": 2,
+      "notes": "8 бит экспоненты, 7 мантиссы; стандарт для весов и KV"
+    },
+    {
+      "id": "fp16",
+      "bytes": 2,
+      "notes": "5 бит экспоненты, 10 мантиссы"
+    },
+    {
+      "id": "fp8_e4m3",
+      "bytes": 1,
+      "notes": "max 448; веса/активации/KV (Hopper+)",
+      "source": "arXiv 2209.05433"
+    },
+    {
+      "id": "fp8_e5m2",
+      "bytes": 1,
+      "notes": "max 57344; шире диапазон, меньше точность",
+      "source": "arXiv 2209.05433"
+    },
+    {
+      "id": "int8",
+      "bytes": 1,
+      "notes": "+ scale"
+    },
+    {
+      "id": "nvfp4",
+      "bytes": 0.5625,
+      "notes": "E2M1 + FP8 E4M3 scale на 16 значений (+FP32 на тензор) = 4.5 бит",
+      "source": "https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/"
+    },
+    {
+      "id": "mxfp4",
+      "bytes": 0.53125,
+      "notes": "E2M1 + E8M0 scale на 32 значения = 4.25 бит (gpt-oss)",
+      "source": "arXiv 2508.10925; NVIDIA NVFP4 blog"
+    },
+    {
+      "id": "int4_w4a16",
+      "bytes": 0.5,
+      "notes": "+ group scales (обычно group 128: +~0.125-0.25 бит)"
+    }
+  ],
+  "gpus": [
+    {
+      "id": "a100-sxm-80gb",
+      "name": "NVIDIA A100 80GB SXM",
+      "arch": "Ampere",
+      "memGB": 80,
+      "usableGiB": 80.0,
+      "memType": "HBM2e",
+      "bwTBs": 2.039,
+      "tflops": {
+        "bf16": 312,
+        "fp8": null,
+        "fp4": null
+      },
+      "ridgeFlopsPerByte": {
+        "bf16": 153.0,
+        "fp8": null,
+        "fp4": null
+      },
+      "nvlinkGBs": 600,
+      "nvlinkGBsPerDirection": 300.0,
+      "nvlinkGen": "NVLink 3 (12 links)",
+      "hostLink": "Gen4 x16 (64 GB/s bidir)",
+      "tdpW": 400,
+      "notes": "FP8 tensor cores отсутствуют (FP8 появился в Hopper); INT8 624 TOPS dense. nvidia-smi: 81920 MiB = 80.0 GiB.",
+      "source": "https://www.nvidia.com/en-us/data-center/a100/ (datasheet: 312 | 624* TFLOPS BF16, *with sparsity); nvidia-smi 81920MiB: github.com/jax-ml/jax/issues/15962"
+    },
+    {
+      "id": "h100-sxm",
+      "name": "NVIDIA H100 SXM 80GB",
+      "arch": "Hopper",
+      "memGB": 80,
+      "usableGiB": 79.65,
+      "memType": "HBM3",
+      "bwTBs": 3.35,
+      "tflops": {
+        "bf16": 989,
+        "fp8": 1979,
+        "fp4": null
+      },
+      "ridgeFlopsPerByte": {
+        "bf16": 295.2,
+        "fp8": 590.7,
+        "fp4": null
+      },
+      "nvlinkGBs": 900,
+      "nvlinkGBsPerDirection": 450.0,
+      "nvlinkGen": "NVLink 4 (18 links)",
+      "hostLink": "Gen5 x16 (128 GB/s bidir)",
+      "tdpW": 700,
+      "notes": "Datasheet даёт 1,979 TFLOPS BF16 и 3,958 FP8 *with sparsity* -> dense = половина. Книга с.62: 989 TFLOPS / 3.35 TB/s = ops:byte ~295. nvidia-smi: 81559 MiB = 79.65 GiB.",
+      "source": "https://www.nvidia.com/en-us/data-center/h100/ ; книга Inference Engineering с.62, с.79; nvidia-smi: docs.nvidia.com/dgx-basepod (81559MiB)"
+    },
+    {
+      "id": "h100-nvl",
+      "name": "NVIDIA H100 NVL 94GB (PCIe)",
+      "arch": "Hopper",
+      "memGB": 94,
+      "usableGiB": null,
+      "memType": "HBM3",
+      "bwTBs": 3.9,
+      "tflops": {
+        "bf16": 835.5,
+        "fp8": 1670.5,
+        "fp4": null
+      },
+      "ridgeFlopsPerByte": {
+        "bf16": 214.2,
+        "fp8": 428.3,
+        "fp4": null
+      },
+      "nvlinkGBs": 600,
+      "nvlinkGBsPerDirection": 300.0,
+      "nvlinkGen": "NVLink bridge (2-way)",
+      "hostLink": "Gen5 x16 (128 GB/s bidir)",
+      "tdpW": 400,
+      "notes": "PCIe-карта; 1,671 / 3,341 TFLOPS в datasheet — with sparsity.",
+      "source": "https://www.nvidia.com/en-us/data-center/h100/"
+    },
+    {
+      "id": "h200-sxm",
+      "name": "NVIDIA H200 SXM 141GB",
+      "arch": "Hopper",
+      "memGB": 141,
+      "usableGiB": 140.4,
+      "memType": "HBM3e",
+      "bwTBs": 4.8,
+      "tflops": {
+        "bf16": 989,
+        "fp8": 1979,
+        "fp4": null
+      },
+      "ridgeFlopsPerByte": {
+        "bf16": 206.0,
+        "fp8": 412.3,
+        "fp4": null
+      },
+      "nvlinkGBs": 900,
+      "nvlinkGBsPerDirection": 450.0,
+      "nvlinkGen": "NVLink 4 (18 links)",
+      "hostLink": "Gen5 x16 (128 GB/s bidir)",
+      "tdpW": 700,
+      "notes": "Тот же кристалл/compute, что H100, но больше и быстрее память -> decode быстрее. nvidia-smi: 143771 MiB = 140.4 GiB.",
+      "source": "https://www.nvidia.com/en-us/data-center/h200/ ; книга с.79; nvidia-smi: github.com/NVIDIA/cuda-samples/issues/311"
+    },
+    {
+      "id": "b200-hgx",
+      "name": "NVIDIA B200 (HGX/DGX B200, ~1000 W)",
+      "arch": "Blackwell",
+      "memGB": 180,
+      "usableGiB": 179.06,
+      "memType": "HBM3e",
+      "bwTBs": 8.0,
+      "tflops": {
+        "bf16": 2250,
+        "fp8": 4500,
+        "fp4": 9000
+      },
+      "ridgeFlopsPerByte": {
+        "bf16": 281.2,
+        "fp8": 562.5,
+        "fp4": 1125.0
+      },
+      "nvlinkGBs": 1800,
+      "nvlinkGBsPerDirection": 900.0,
+      "nvlinkGen": "NVLink 5 (18 links)",
+      "hostLink": "Gen6 x16 (256 GB/s bidir)",
+      "tdpW": 1000,
+      "notes": "HGX B200 (8 GPU): FP4 144|72 PF (sparse|dense), FP8 72 PF sparse, BF16 36 PF sparse -> /8 и /2. Физически 192 GB HBM3e; NVIDIA пишет 180 GB; nvidia-smi 183359 MiB = 179.06 GiB (=192.3 GB десятичных). DGX B200: 64 TB/s на 8 GPU.",
+      "source": "https://www.nvidia.com/en-us/data-center/hgx/ ; https://www.nvidia.com/en-us/data-center/dgx-b200/ ; nvidia-smi: forums.developer.nvidia.com/t/364164"
+    },
+    {
+      "id": "gb200",
+      "name": "NVIDIA GB200 (per Blackwell GPU, NVL72, ~1200 W)",
+      "arch": "Blackwell",
+      "memGB": 186,
+      "usableGiB": 185.03,
+      "memType": "HBM3e",
+      "bwTBs": 8.0,
+      "tflops": {
+        "bf16": 2500,
+        "fp8": 5000,
+        "fp4": 10000
+      },
+      "ridgeFlopsPerByte": {
+        "bf16": 312.5,
+        "fp8": 625.0,
+        "fp4": 1250.0
+      },
+      "nvlinkGBs": 1800,
+      "nvlinkGBsPerDirection": 900.0,
+      "nvlinkGen": "NVLink 5 (18 links), домен 72 GPU",
+      "hostLink": "NVLink-C2C к Grace 900 GB/s bidir",
+      "tdpW": 1200,
+      "notes": "Superchip = 1 Grace + 2 GPU: FP4 40|20 PF, FP8 20 PF sparse, BF16 10 PF sparse, 372 GB, 16 TB/s -> /2. NVIDIA blog: B200 10/20 PF NVFP4, 5/10 PF FP8 dense/sparse. nvidia-smi 189471 MiB = 185.0 GiB.",
+      "source": "https://www.nvidia.com/en-us/data-center/gb200-nvl72/ ; https://developer.nvidia.com/blog/inside-nvidia-blackwell-ultra-the-chip-powering-the-ai-factory-era/"
+    },
+    {
+      "id": "b300-hgx",
+      "name": "NVIDIA B300 Blackwell Ultra (HGX B300)",
+      "arch": "Blackwell Ultra",
+      "memGB": 288,
+      "usableGiB": 268.59,
+      "memType": "HBM3e 12-high",
+      "bwTBs": 8.0,
+      "tflops": {
+        "bf16": 2250,
+        "fp8": 4500,
+        "fp4": 13500
+      },
+      "ridgeFlopsPerByte": {
+        "bf16": 281.2,
+        "fp8": 562.5,
+        "fp4": 1687.5
+      },
+      "nvlinkGBs": 1800,
+      "nvlinkGBsPerDirection": 900.0,
+      "nvlinkGen": "NVLink 5 (18 links)",
+      "hostLink": "Gen6 x16 (256 GB/s bidir)",
+      "tdpW": 1100,
+      "notes": "HGX B300: FP4 144|108 PF (sparse|dense), FP8 72 PF sparse, BF16 36 PF sparse -> /8 (и /2 для FP8/BF16). INT8 урезан до 3 POPS на 8 GPU, FP64 10 TF на 8 GPU. nvidia-smi 'B300 SXM6 AC' 275040 MiB = 268.6 GiB, лимит 1100 W (OCI).",
+      "source": "https://www.nvidia.com/en-us/data-center/hgx/ ; https://docs.oracle.com/en-us/iaas/Content/Compute/gpu-quick-start/nvidia/B300/README-B300.htm"
+    },
+    {
+      "id": "gb300",
+      "name": "NVIDIA GB300 (per Blackwell Ultra GPU, NVL72)",
+      "arch": "Blackwell Ultra",
+      "memGB": 288,
+      "usableGiB": null,
+      "memType": "HBM3e 12-high",
+      "bwTBs": 8.0,
+      "tflops": {
+        "bf16": 2500,
+        "fp8": 5000,
+        "fp4": 15000
+      },
+      "ridgeFlopsPerByte": {
+        "bf16": 312.5,
+        "fp8": 625.0,
+        "fp4": 1875.0
+      },
+      "nvlinkGBs": 1800,
+      "nvlinkGBsPerDirection": 900.0,
+      "nvlinkGen": "NVLink 5, домен 72 GPU",
+      "hostLink": "NVLink-C2C к Grace 900 GB/s bidir",
+      "tdpW": 1400,
+      "notes": "GB300 NVL72: FP4 1440|1080 PF, FP8 720 PF sparse, BF16 360 PF sparse, 20 TB HBM, 576 TB/s -> /72. NVIDIA blog: 15/20 PF NVFP4 dense/sparse, 5/10 PF FP8, up to 1400 W.",
+      "source": "https://www.nvidia.com/en-us/data-center/gb300-nvl72/ ; https://developer.nvidia.com/blog/inside-nvidia-blackwell-ultra-the-chip-powering-the-ai-factory-era/"
+    },
+    {
+      "id": "l40s",
+      "name": "NVIDIA L40S 48GB",
+      "arch": "Ada Lovelace",
+      "memGB": 48,
+      "usableGiB": 44.99,
+      "memType": "GDDR6 ECC",
+      "bwTBs": 0.864,
+      "tflops": {
+        "bf16": 362,
+        "fp8": 733,
+        "fp4": null
+      },
+      "ridgeFlopsPerByte": {
+        "bf16": 419.0,
+        "fp8": 848.4,
+        "fp4": null
+      },
+      "nvlinkGBs": null,
+      "nvlinkGBsPerDirection": null,
+      "nvlinkGen": "нет NVLink",
+      "hostLink": "Gen4 x16 (64 GB/s bidir)",
+      "tdpW": 350,
+      "notes": "Datasheet: BF16 362.05 | 733*, FP8 733 | 1,466* (*with sparsity). nvidia-smi 46068 MiB (ECC on).",
+      "source": "https://www.nvidia.com/en-us/data-center/l40s/"
+    },
+    {
+      "id": "l4",
+      "name": "NVIDIA L4 24GB",
+      "arch": "Ada Lovelace",
+      "memGB": 24,
+      "usableGiB": 22.49,
+      "memType": "GDDR6",
+      "bwTBs": 0.3,
+      "tflops": {
+        "bf16": 121,
+        "fp8": 242.5,
+        "fp4": null
+      },
+      "ridgeFlopsPerByte": {
+        "bf16": 403.3,
+        "fp8": 808.3,
+        "fp4": null
+      },
+      "nvlinkGBs": null,
+      "nvlinkGBsPerDirection": null,
+      "nvlinkGen": "нет NVLink",
+      "hostLink": "Gen4 x16 (64 GB/s)",
+      "tdpW": 72,
+      "notes": "Datasheet: BF16 242*, FP8 485* (*with sparsity, dense = 1/2). Книга с.80: FP8 dense 242 TFLOPS, 300 GB/s. nvidia-smi 23034 MiB.",
+      "source": "https://www.nvidia.com/en-us/data-center/l4/ ; книга с.80"
+    },
+    {
+      "id": "rtx-4090",
+      "name": "GeForce RTX 4090 24GB",
+      "arch": "Ada Lovelace",
+      "memGB": 24,
+      "usableGiB": null,
+      "memType": "GDDR6X",
+      "bwTBs": 1.008,
+      "tflops": {
+        "bf16": 165.2,
+        "fp8": 330.3,
+        "fp4": null
+      },
+      "ridgeFlopsPerByte": {
+        "bf16": 163.9,
+        "fp8": 327.7,
+        "fp4": null
+      },
+      "nvlinkGBs": null,
+      "nvlinkGBsPerDirection": null,
+      "nvlinkGen": "нет NVLink",
+      "hostLink": "Gen4 x16",
+      "tdpW": 450,
+      "notes": "GeForce: FP32-accumulate идёт на половинной скорости. BF16 (FP32 acc) 165.2 dense; FP16 с FP16 acc 330.3; FP8 с FP32 acc 330.3, с FP16 acc 660.6.",
+      "source": "NVIDIA Ada GPU Architecture whitepaper v2.x, Appendix A (images.nvidia.com/aem-dam/Solutions/geforce/ada/nvidia-ada-gpu-architecture.pdf)"
+    },
+    {
+      "id": "rtx-5090",
+      "name": "GeForce RTX 5090 32GB",
+      "arch": "Blackwell (GB202)",
+      "memGB": 32,
+      "usableGiB": null,
+      "memType": "GDDR7",
+      "bwTBs": 1.792,
+      "tflops": {
+        "bf16": 209.5,
+        "fp8": 419,
+        "fp4": 1676
+      },
+      "ridgeFlopsPerByte": {
+        "bf16": 116.9,
+        "fp8": 233.8,
+        "fp4": 935.3
+      },
+      "nvlinkGBs": null,
+      "nvlinkGBsPerDirection": null,
+      "nvlinkGen": "нет NVLink",
+      "hostLink": "Gen5 x16",
+      "tdpW": 575,
+      "notes": "Whitepaper Table 3: BF16 (FP32 acc) 209.5/419, FP8 (FP32 acc) 419/838, FP8 (FP16 acc) 838/1676, FP4 (FP32 acc) 1676/3352 (dense/sparse). 'AI TOPS 3352' = sparse FP4. Книга с.90: 32 GB, 1,792 GB/s.",
+      "source": "NVIDIA RTX Blackwell GPU Architecture whitepaper, Table 3 (images.nvidia.com/aem-dam/Solutions/geforce/blackwell/nvidia-rtx-blackwell-gpu-architecture.pdf); книга с.90"
+    },
+    {
+      "id": "mi300x",
+      "name": "AMD Instinct MI300X (для сравнения)",
+      "arch": "CDNA 3",
+      "memGB": 192,
+      "usableGiB": null,
+      "memType": "HBM3",
+      "bwTBs": 5.3,
+      "tflops": {
+        "bf16": 1307.4,
+        "fp8": 2614.9,
+        "fp4": null
+      },
+      "ridgeFlopsPerByte": {
+        "bf16": 246.7,
+        "fp8": 493.4,
+        "fp4": null
+      },
+      "nvlinkGBs": null,
+      "nvlinkGBsPerDirection": null,
+      "nvlinkGen": "Infinity Fabric (не NVLink)",
+      "hostLink": "Gen5 x16",
+      "tdpW": 750,
+      "notes": "Опционально, не NVIDIA. Dense; sparse = x2.",
+      "source": "https://www.glennklockwood.com/garden/processors/mi300x (сводка спецификаций AMD)"
+    },
+    {
+      "id": "mi355x",
+      "name": "AMD Instinct MI355X (для сравнения)",
+      "arch": "CDNA 4",
+      "memGB": 288,
+      "usableGiB": null,
+      "memType": "HBM3e",
+      "bwTBs": 8.0,
+      "tflops": {
+        "bf16": 2516.6,
+        "fp8": 5033.2,
+        "fp4": 10066.3
+      },
+      "ridgeFlopsPerByte": {
+        "bf16": 314.6,
+        "fp8": 629.1,
+        "fp4": 1258.3
+      },
+      "nvlinkGBs": null,
+      "nvlinkGBsPerDirection": null,
+      "nvlinkGen": "Infinity Fabric (не NVLink)",
+      "hostLink": "Gen5 x16",
+      "tdpW": 1400,
+      "notes": "Опционально, не NVIDIA. Dense; Oracle публикует sparse (FP16 5 PF, FP8 10.1 PF).",
+      "source": "https://www.glennklockwood.com/garden/processors/mi355x ; https://inferencex.semianalysis.com/chips/mi355x"
+    }
+  ],
+  "interconnects": [
+    {
+      "id": "hbm3-h100",
+      "name": "HBM3 (H100 SXM) — для масштаба",
+      "GBs": 3350,
+      "GBsBidirectional": null,
+      "notes": "Не интерконнект, а память GPU: эталон 'самого быстрого' уровня (G1).",
+      "source": "https://www.nvidia.com/en-us/data-center/h100/"
+    },
+    {
+      "id": "hbm3e-b200",
+      "name": "HBM3e (B200/B300) — для масштаба",
+      "GBs": 8000,
+      "GBsBidirectional": null,
+      "notes": "Память GPU Blackwell, 8 TB/s.",
+      "source": "https://developer.nvidia.com/blog/inside-nvidia-blackwell-ultra-the-chip-powering-the-ai-factory-era/"
+    },
+    {
+      "id": "pcie4-x16",
+      "name": "PCIe Gen4 x16",
+      "GBs": 31.5,
+      "GBsBidirectional": 63.0,
+      "notes": "16 GT/s/lane, 128b/130b. NVIDIA округляет до '64 GB/s' (bidir). Реально достижимо ~25 GB/s в одну сторону.",
+      "source": "https://en.wikipedia.org/wiki/PCI_Express (31.508 GB/s per direction x16); A100/L40S datasheets"
+    },
+    {
+      "id": "pcie5-x16",
+      "name": "PCIe Gen5 x16",
+      "GBs": 63.0,
+      "GBsBidirectional": 126.0,
+      "notes": "32 GT/s/lane, 128b/130b. NVIDIA пишет '128 GB/s' (bidir, H100/H200). Реально ~50-55 GB/s в одну сторону.",
+      "source": "https://en.wikipedia.org/wiki/PCI_Express (63.015 GB/s); H100 datasheet"
+    },
+    {
+      "id": "pcie6-x16",
+      "name": "PCIe Gen6 x16",
+      "GBs": 121.0,
+      "GBsBidirectional": 242.0,
+      "notes": "64 GT/s PAM4, FLIT 242B/256B. NVIDIA пишет '256 GB/s bidir' для Blackwell (raw).",
+      "source": "https://en.wikipedia.org/wiki/PCI_Express ; NVIDIA Blackwell Ultra blog"
+    },
+    {
+      "id": "nvlink3",
+      "name": "NVLink 3 (A100)",
+      "GBs": 300,
+      "GBsBidirectional": 600,
+      "notes": "12 links x 50 GB/s bidir.",
+      "source": "https://www.nvidia.com/en-us/data-center/a100/"
+    },
+    {
+      "id": "nvlink4",
+      "name": "NVLink 4 (H100/H200)",
+      "GBs": 450,
+      "GBsBidirectional": 900,
+      "notes": "18 links; через NVSwitch all-to-all внутри 8-GPU ноды. Книга с.84: 900 GB/s на Hopper.",
+      "source": "https://www.nvidia.com/en-us/data-center/nvlink/ ; книга с.84"
+    },
+    {
+      "id": "nvlink5",
+      "name": "NVLink 5 (B200/GB200/B300)",
+      "GBs": 900,
+      "GBsBidirectional": 1800,
+      "notes": "18 links; домен 8 GPU (HGX) или 72 GPU (NVL72, 130 TB/s суммарно). Книга с.84: 1800 GB/s.",
+      "source": "https://www.nvidia.com/en-us/data-center/nvlink/ ; книга с.84"
+    },
+    {
+      "id": "nvlink-c2c",
+      "name": "NVLink-C2C (Grace <-> Hopper/Blackwell)",
+      "GBs": 450,
+      "GBsBidirectional": 900,
+      "notes": "Когерентная связь CPU-GPU в GH200/GB200; ~7x PCIe Gen5. Книга с.82.",
+      "source": "NVIDIA Blackwell Ultra blog; книга с.82"
+    },
+    {
+      "id": "ib-ndr",
+      "name": "InfiniBand NDR 400 Gb/s (ConnectX-7)",
+      "GBs": 50,
+      "GBsBidirectional": 100,
+      "notes": "4 lanes x 100 Gb/s (106.25 GBd PAM4). В DGX H100/B200: 8 NIC x 400G = 400 GB/s на ноду в одну сторону.",
+      "source": "https://en.wikipedia.org/wiki/InfiniBand ; https://docs.nvidia.com/dgx/dgxh100-user-guide/introduction-to-dgxh100.html"
+    },
+    {
+      "id": "ib-xdr",
+      "name": "InfiniBand XDR 800 Gb/s (ConnectX-8)",
+      "GBs": 100,
+      "GBsBidirectional": 200,
+      "notes": "4 lanes x 200 Gb/s. DGX B300: 8 x ConnectX-8 до 800 Gb/s. ConnectX-8 Ethernet: до 400 Gb/s на порт (2 порта = 800).",
+      "source": "https://en.wikipedia.org/wiki/InfiniBand ; https://www.nvidia.com/en-us/data-center/dgx-b300/ ; NVIDIA ConnectX-8 datasheet"
+    },
+    {
+      "id": "roce-400g",
+      "name": "RoCE v2 / Ethernet 400GbE",
+      "GBs": 50,
+      "GBsBidirectional": 100,
+      "notes": "Та же скорость линии, что NDR; RDMA поверх Ethernet (ConnectX-7, Spectrum-X). Книга с.84 утверждает 'Ethernet max 100 Gb/s per NIC' — устарело.",
+      "source": "NVIDIA ConnectX-7/-8 datasheets; https://docs.nvidia.com/dgx/dgxh100-user-guide/introduction-to-dgxh100.html (400GbE)"
+    },
+    {
+      "id": "nvme-gen4",
+      "name": "NVMe SSD PCIe Gen4 x4 (seq read)",
+      "GBs": 7.0,
+      "GBsBidirectional": null,
+      "notes": "Samsung 990 PRO: 7,450 MB/s seq read (потолок Gen4 x4 ~7.9 GB/s). DC-диски Gen4 ~6.5-7 GB/s.",
+      "source": "https://download.semiconductor.samsung.com/resources/data-sheet/Samsung_NVMe_SSD_990_PRO_Datasheet_Rev.1.0.pdf"
+    },
+    {
+      "id": "nvme-gen5",
+      "name": "NVMe SSD PCIe Gen5 x4 (seq read)",
+      "GBs": 14.0,
+      "GBsBidirectional": null,
+      "notes": "Micron 9550 (DC): 14,000 MB/s; Samsung 9100 PRO: 14,800 MB/s. Потолок Gen5 x4 ~14.3 GB/s (Micron GDS brief). DGX B200/H100: 8 x 3.84 TB NVMe.",
+      "source": "https://www.micron.com/products/storage/ssd/data-center-ssd/9550-ssd ; Samsung 9100 PRO page"
+    },
+    {
+      "id": "ddr5-epyc9005",
+      "name": "DDR5-6400 x 12 каналов (AMD EPYC 9005, 1 сокет)",
+      "GBs": 614.4,
+      "GBsBidirectional": null,
+      "notes": "12 x 51.2 GB/s, теоретический пик; STREAM ниже. Genoa (12 x DDR5-4800) = 460.8 GB/s.",
+      "source": "AMD EPYC 9005 datasheet (12 x DDR5-6400); Kingston Turin population guide"
+    },
+    {
+      "id": "ddr5-spr-8480",
+      "name": "DDR5-4800 x 8 каналов (Xeon 8480C, DGX H100, 1 сокет)",
+      "GBs": 307.2,
+      "GBsBidirectional": null,
+      "notes": "8 x 38.4 GB/s. DGX H100: 2 сокета, 2 TB RAM.",
+      "source": "https://docs.nvidia.com/dgx/dgxh100-user-guide/introduction-to-dgxh100.html ; DDR5 arithmetic"
+    },
+    {
+      "id": "ddr5-xeon6-mrdimm",
+      "name": "MRDIMM-8800 x 12 каналов (Xeon 6900P, 1 сокет)",
+      "GBs": 844.8,
+      "GBsBidirectional": null,
+      "notes": "С обычными DDR5-6400: 614.4 GB/s.",
+      "source": "Intel Xeon 6 product brief; Tom's Hardware (Xeon 6900P)"
+    },
+    {
+      "id": "lpddr5x-grace",
+      "name": "LPDDR5X Grace CPU (в GB200)",
+      "GBs": 512,
+      "GBsBidirectional": null,
+      "notes": "До 480 GB на Grace, до 512 GB/s; доступ из GPU через NVLink-C2C 900 GB/s bidir.",
+      "source": "https://www.nvidia.com/en-us/data-center/gb200-nvl72/"
+    }
+  ],
+  "models": [
+    {
+      "id": "llama-3.1-8b",
+      "name": "Llama-3.1-8B(-Instruct)",
+      "layers": 32,
+      "hidden": 4096,
+      "heads": 32,
+      "kvHeads": 8,
+      "headDim": 128,
+      "intermediate": 14336,
+      "vocab": 128256,
+      "maxPositionEmbeddings": 131072,
+      "paramsB": 8.03,
+      "activeParamsB": 8.03,
+      "activeParamsB_inclEmbedding": 8.03,
+      "activeMatmulParamsB": 7.505,
+      "attention": "GQA (32 Q / 8 KV), full causal",
+      "kvFormula": "standard",
+      "kvCacheValuesPerLayer": 2048,
+      "kvBytesPerTokenBF16": 131072,
+      "kvBytesPerTokenFP8": 65536,
+      "weightsGB": {
+        "bf16": 16.06,
+        "fp8": 8.03,
+        "nvfp4": 4.52,
+        "mxfp4": 4.27
+      },
+      "source": "https://huggingface.co/unsloth/Meta-Llama-3.1-8B-Instruct/blob/main/config.json (зеркало gated meta-llama/Llama-3.1-8B-Instruct)",
+      "notes": "Плотная модель: все параметры активны на каждый токен."
+    },
+    {
+      "id": "llama-3.1-70b",
+      "name": "Llama-3.1-70B(-Instruct)",
+      "layers": 80,
+      "hidden": 8192,
+      "heads": 64,
+      "kvHeads": 8,
+      "headDim": 128,
+      "intermediate": 28672,
+      "vocab": 128256,
+      "maxPositionEmbeddings": 131072,
+      "paramsB": 70.554,
+      "activeParamsB": 70.554,
+      "activeParamsB_inclEmbedding": 70.554,
+      "activeMatmulParamsB": 69.502,
+      "attention": "GQA (64 Q / 8 KV), full causal",
+      "kvFormula": "standard",
+      "kvCacheValuesPerLayer": 2048,
+      "kvBytesPerTokenBF16": 327680,
+      "kvBytesPerTokenFP8": 163840,
+      "weightsGB": {
+        "bf16": 141.11,
+        "fp8": 70.55,
+        "nvfp4": 39.69,
+        "mxfp4": 37.48
+      },
+      "source": "https://huggingface.co/unsloth/Meta-Llama-3.1-70B-Instruct/blob/main/config.json (зеркало meta-llama)",
+      "notes": "Плотная модель: все параметры активны на каждый токен."
+    },
+    {
+      "id": "llama-3.1-405b",
+      "name": "Llama-3.1-405B(-Instruct)",
+      "layers": 126,
+      "hidden": 16384,
+      "heads": 128,
+      "kvHeads": 8,
+      "headDim": 128,
+      "intermediate": 53248,
+      "vocab": 128256,
+      "maxPositionEmbeddings": 131072,
+      "paramsB": 405.853,
+      "activeParamsB": 405.853,
+      "activeParamsB_inclEmbedding": 405.853,
+      "activeMatmulParamsB": 403.748,
+      "attention": "GQA (128 Q / 8 KV), full causal",
+      "kvFormula": "standard",
+      "kvCacheValuesPerLayer": 2048,
+      "kvBytesPerTokenBF16": 516096,
+      "kvBytesPerTokenFP8": 258048,
+      "weightsGB": {
+        "bf16": 811.71,
+        "fp8": 405.85,
+        "nvfp4": 228.29,
+        "mxfp4": 215.61
+      },
+      "source": "https://huggingface.co/unsloth/Meta-Llama-3.1-405B-Instruct-bnb-4bit/blob/main/config.json (архитектурные поля = meta-llama)",
+      "notes": "Плотная модель: все параметры активны на каждый токен."
+    },
+    {
+      "id": "qwen3-8b",
+      "name": "Qwen3-8B",
+      "layers": 36,
+      "hidden": 4096,
+      "heads": 32,
+      "kvHeads": 8,
+      "headDim": 128,
+      "intermediate": 12288,
+      "vocab": 151936,
+      "maxPositionEmbeddings": 40960,
+      "paramsB": 8.191,
+      "activeParamsB": 8.191,
+      "activeParamsB_inclEmbedding": 8.191,
+      "activeMatmulParamsB": 7.568,
+      "attention": "GQA (32 Q / 8 KV) + QK-RMSNorm, full causal",
+      "kvFormula": "standard",
+      "kvCacheValuesPerLayer": 2048,
+      "kvBytesPerTokenBF16": 147456,
+      "kvBytesPerTokenFP8": 73728,
+      "weightsGB": {
+        "bf16": 16.38,
+        "fp8": 8.19,
+        "nvfp4": 4.61,
+        "mxfp4": 4.35
+      },
+      "source": "https://huggingface.co/Qwen/Qwen3-8B/blob/main/config.json",
+      "notes": "Плотная модель: все параметры активны на каждый токен. max_position_embeddings=40960 в config; карточка модели: 32,768 нативно, 131,072 с YaRN."
+    },
+    {
+      "id": "qwen3-32b",
+      "name": "Qwen3-32B",
+      "layers": 64,
+      "hidden": 5120,
+      "heads": 64,
+      "kvHeads": 8,
+      "headDim": 128,
+      "intermediate": 25600,
+      "vocab": 151936,
+      "maxPositionEmbeddings": 40960,
+      "paramsB": 32.762,
+      "activeParamsB": 32.762,
+      "activeParamsB_inclEmbedding": 32.762,
+      "activeMatmulParamsB": 31.984,
+      "attention": "GQA (64 Q / 8 KV) + QK-RMSNorm; nh*hd=8192 > hidden=5120",
+      "kvFormula": "standard",
+      "kvCacheValuesPerLayer": 2048,
+      "kvBytesPerTokenBF16": 262144,
+      "kvBytesPerTokenFP8": 131072,
+      "weightsGB": {
+        "bf16": 65.52,
+        "fp8": 32.76,
+        "nvfp4": 18.43,
+        "mxfp4": 17.4
+      },
+      "source": "https://huggingface.co/Qwen/Qwen3-32B/blob/main/config.json",
+      "notes": "Плотная модель: все параметры активны на каждый токен. num_heads*head_dim = 8192 != hidden_size 5120 (Q-проекция расширяет размерность). max_position_embeddings=40960 в config; карточка модели: 32,768 нативно, 131,072 с YaRN."
+    },
+    {
+      "id": "qwen3-30b-a3b",
+      "name": "Qwen3-30B-A3B",
+      "layers": 48,
+      "hidden": 2048,
+      "heads": 32,
+      "kvHeads": 4,
+      "headDim": 128,
+      "intermediate": 6144,
+      "vocab": 151936,
+      "maxPositionEmbeddings": 40960,
+      "paramsB": 30.532,
+      "activeParamsB": 3.353,
+      "activeParamsB_inclEmbedding": 3.353,
+      "activeMatmulParamsB": 3.042,
+      "attention": "GQA (32 Q / 4 KV) + QK-RMSNorm; MoE 128 experts, top-8, без shared",
+      "kvFormula": "standard",
+      "kvCacheValuesPerLayer": 1024,
+      "kvBytesPerTokenBF16": 98304,
+      "kvBytesPerTokenFP8": 49152,
+      "weightsGB": {
+        "bf16": 61.06,
+        "fp8": 30.53,
+        "nvfp4": 17.17,
+        "mxfp4": 16.22
+      },
+      "source": "https://huggingface.co/Qwen/Qwen3-30B-A3B/blob/main/config.json",
+      "experts": {
+        "total": 128,
+        "active": 8,
+        "shared": 0,
+        "moeIntermediate": 768
+      },
+      "notes": "num_heads*head_dim = 4096 != hidden_size 2048 (Q-проекция расширяет размерность). max_position_embeddings=40960 в config; карточка модели: 32,768 нативно, 131,072 с YaRN."
+    },
+    {
+      "id": "qwen3-235b-a22b",
+      "name": "Qwen3-235B-A22B",
+      "layers": 94,
+      "hidden": 4096,
+      "heads": 64,
+      "kvHeads": 4,
+      "headDim": 128,
+      "intermediate": 12288,
+      "vocab": 151936,
+      "maxPositionEmbeddings": 40960,
+      "paramsB": 235.094,
+      "activeParamsB": 22.191,
+      "activeParamsB_inclEmbedding": 22.191,
+      "activeMatmulParamsB": 21.568,
+      "attention": "GQA (64 Q / 4 KV) + QK-RMSNorm; MoE 128 experts, top-8, без shared",
+      "kvFormula": "standard",
+      "kvCacheValuesPerLayer": 1024,
+      "kvBytesPerTokenBF16": 192512,
+      "kvBytesPerTokenFP8": 96256,
+      "weightsGB": {
+        "bf16": 470.19,
+        "fp8": 235.09,
+        "nvfp4": 132.24,
+        "mxfp4": 124.89
+      },
+      "source": "https://huggingface.co/Qwen/Qwen3-235B-A22B/blob/main/config.json ; книга с.53-54",
+      "experts": {
+        "total": 128,
+        "active": 8,
+        "shared": 0,
+        "moeIntermediate": 1536
+      },
+      "notes": "num_heads*head_dim = 8192 != hidden_size 4096 (Q-проекция расширяет размерность). max_position_embeddings=40960 в config; карточка модели: 32,768 нативно, 131,072 с YaRN."
+    },
+    {
+      "id": "deepseek-v3",
+      "name": "DeepSeek-V3 / R1 / V3.1 (одна архитектура)",
+      "layers": 61,
+      "hidden": 7168,
+      "heads": 128,
+      "kvHeads": 1,
+      "headDim": 192,
+      "intermediate": 18432,
+      "vocab": 129280,
+      "maxPositionEmbeddings": 163840,
+      "paramsB": 671.026,
+      "activeParamsB": 37.552,
+      "activeParamsB_inclEmbedding": 37.552,
+      "activeMatmulParamsB": 36.625,
+      "attention": "MLA: кэш = latent c_kv (512) + k_rope (64) на слой; 128 голов; MoE 256 routed top-8 + 1 shared",
+      "kvFormula": "mla",
+      "kvCacheValuesPerLayer": 576,
+      "kvBytesPerTokenBF16": 70272,
+      "kvBytesPerTokenFP8": 35136,
+      "weightsGB": {
+        "bf16": 1342.05,
+        "fp8": 671.03,
+        "nvfp4": 377.45,
+        "mxfp4": 356.48
+      },
+      "source": "https://huggingface.co/deepseek-ai/DeepSeek-V3/blob/main/config.json ; .../DeepSeek-R1 ; .../DeepSeek-V3.1",
+      "experts": {
+        "total": 256,
+        "active": 8,
+        "shared": 1,
+        "moeIntermediate": 2048
+      },
+      "mla": {
+        "kv_lora_rank": 512,
+        "qk_rope_head_dim": 64,
+        "qk_nope_head_dim": 128,
+        "v_head_dim": 128,
+        "q_lora_rank": 1536,
+        "cachedValuesPerLayer": 576
+      },
+      "notes": "MLA: kvHeads=1 и headDim=192 (=qk_nope 128 + rope 64) условны; в кэше на слой лежит ОДИН вектор 576 значений (latent 512 + k_rope 64), без отдельных K и V, поэтому kvBytesPerToken = layers*576*bytes (без множителя 2). config.json пишет num_key_value_heads=128 — для размера кэша это поле не использовать. Latent общий для всех голов -> при TP он дублируется на каждом TP-ранге (лечится DP-attention). HF-чекпоинт 685B = 671B основная модель + ~14B MTP-модуль (используется для speculative decoding)."
+    },
+    {
+      "id": "kimi-k2",
+      "name": "Kimi-K2-Instruct (опционально)",
+      "layers": 61,
+      "hidden": 7168,
+      "heads": 64,
+      "kvHeads": 1,
+      "headDim": 192,
+      "intermediate": 18432,
+      "vocab": 163840,
+      "maxPositionEmbeddings": 131072,
+      "paramsB": 1026.408,
+      "activeParamsB": 32.862,
+      "activeParamsB_inclEmbedding": 32.862,
+      "activeMatmulParamsB": 31.686,
+      "attention": "MLA (как DeepSeek-V3), 64 головы; MoE 384 routed top-8 + 1 shared",
+      "kvFormula": "mla",
+      "kvCacheValuesPerLayer": 576,
+      "kvBytesPerTokenBF16": 70272,
+      "kvBytesPerTokenFP8": 35136,
+      "weightsGB": {
+        "bf16": 2052.82,
+        "fp8": 1026.41,
+        "nvfp4": 577.35,
+        "mxfp4": 545.28
+      },
+      "source": "https://huggingface.co/moonshotai/Kimi-K2-Instruct/blob/main/config.json",
+      "experts": {
+        "total": 384,
+        "active": 8,
+        "shared": 1,
+        "moeIntermediate": 2048
+      },
+      "mla": {
+        "kv_lora_rank": 512,
+        "qk_rope_head_dim": 64,
+        "qk_nope_head_dim": 128,
+        "v_head_dim": 128,
+        "q_lora_rank": 1536,
+        "cachedValuesPerLayer": 576
+      },
+      "notes": "MLA: kvHeads=1 и headDim=192 (=qk_nope 128 + rope 64) условны; в кэше на слой лежит ОДИН вектор 576 значений (latent 512 + k_rope 64), без отдельных K и V, поэтому kvBytesPerToken = layers*576*bytes (без множителя 2). config.json пишет num_key_value_heads=128 — для размера кэша это поле не использовать. Latent общий для всех голов -> при TP он дублируется на каждом TP-ранге (лечится DP-attention)."
+    },
+    {
+      "id": "gpt-oss-20b",
+      "name": "gpt-oss-20b",
+      "layers": 24,
+      "hidden": 2880,
+      "heads": 64,
+      "kvHeads": 8,
+      "headDim": 64,
+      "intermediate": 2880,
+      "vocab": 201088,
+      "maxPositionEmbeddings": 131072,
+      "paramsB": 20.915,
+      "activeParamsB": 3.608,
+      "activeParamsB_inclEmbedding": 4.187,
+      "activeMatmulParamsB": 3.607,
+      "attention": "GQA (64 Q / 8 KV), чередование: sliding window 128 / full; attention sinks; MoE 32 experts top-4",
+      "kvFormula": "swa-hybrid",
+      "kvCacheValuesPerLayer": 1024,
+      "kvBytesPerTokenBF16": 49152,
+      "kvBytesPerTokenFP8": 24576,
+      "weightsGB": {
+        "bf16": 41.83,
+        "fp8": 20.91,
+        "nvfp4": 11.76,
+        "mxfp4": 11.11
+      },
+      "source": "https://huggingface.co/openai/gpt-oss-20b/blob/main/config.json ; arXiv 2508.10925 Table 1",
+      "experts": {
+        "total": 32,
+        "active": 4,
+        "shared": 0,
+        "moeIntermediate": 2880
+      },
+      "slidingWindow": {
+        "window": 128,
+        "slidingLayers": 12,
+        "fullLayers": 12,
+        "kvBytesPerTokenBF16_fullLayersOnly": 24576,
+        "kvBytesSlidingLayersPerTokenBF16": 24576,
+        "formula": "KV(S) = S*fullLayersBytes + min(S, window)*slidingLayersBytes"
+      },
+      "checkpointGiB": 12.82,
+      "checkpointGB": 13.76,
+      "notes": "MoE-веса в MXFP4 (4.25 бит/параметр), attention/router/embeddings в BF16. activeParamsB — по определению OpenAI (без таблицы эмбеддингов, с unembedding), как в карточке модели; с эмбеддингами — activeParamsB_inclEmbedding. kvBytesPerTokenBF16 — наивная оценка (все слои хранят весь контекст). Движок с поддержкой гибридного/sliding-window кэша хранит в sliding-слоях только последние window токенов."
+    },
+    {
+      "id": "gpt-oss-120b",
+      "name": "gpt-oss-120b",
+      "layers": 36,
+      "hidden": 2880,
+      "heads": 64,
+      "kvHeads": 8,
+      "headDim": 64,
+      "intermediate": 2880,
+      "vocab": 201088,
+      "maxPositionEmbeddings": 131072,
+      "paramsB": 116.829,
+      "activeParamsB": 5.133,
+      "activeParamsB_inclEmbedding": 5.712,
+      "activeMatmulParamsB": 5.131,
+      "attention": "GQA (64 Q / 8 KV), чередование: sliding window 128 / full; attention sinks; MoE 128 experts top-4",
+      "kvFormula": "swa-hybrid",
+      "kvCacheValuesPerLayer": 1024,
+      "kvBytesPerTokenBF16": 73728,
+      "kvBytesPerTokenFP8": 36864,
+      "weightsGB": {
+        "bf16": 233.66,
+        "fp8": 116.83,
+        "nvfp4": 65.72,
+        "mxfp4": 62.07
+      },
+      "source": "https://huggingface.co/openai/gpt-oss-120b/blob/main/config.json ; arXiv 2508.10925 Table 1",
+      "experts": {
+        "total": 128,
+        "active": 4,
+        "shared": 0,
+        "moeIntermediate": 2880
+      },
+      "slidingWindow": {
+        "window": 128,
+        "slidingLayers": 18,
+        "fullLayers": 18,
+        "kvBytesPerTokenBF16_fullLayersOnly": 36864,
+        "kvBytesSlidingLayersPerTokenBF16": 36864,
+        "formula": "KV(S) = S*fullLayersBytes + min(S, window)*slidingLayersBytes"
+      },
+      "checkpointGiB": 60.77,
+      "checkpointGB": 65.25,
+      "notes": "MoE-веса в MXFP4 (4.25 бит/параметр), attention/router/embeddings в BF16. activeParamsB — по определению OpenAI (без таблицы эмбеддингов, с unembedding), как в карточке модели; с эмбеддингами — activeParamsB_inclEmbedding. kvBytesPerTokenBF16 — наивная оценка (все слои хранят весь контекст). Движок с поддержкой гибридного/sliding-window кэша хранит в sliding-слоях только последние window токенов."
+    },
+    {
+      "id": "mistral-small-24b",
+      "name": "Mistral-Small-24B-Instruct-2501",
+      "layers": 40,
+      "hidden": 5120,
+      "heads": 32,
+      "kvHeads": 8,
+      "headDim": 128,
+      "intermediate": 32768,
+      "vocab": 131072,
+      "maxPositionEmbeddings": 32768,
+      "paramsB": 23.572,
+      "activeParamsB": 23.572,
+      "activeParamsB_inclEmbedding": 23.572,
+      "activeMatmulParamsB": 22.901,
+      "attention": "GQA (32 Q / 8 KV), full causal (sliding_window: null)",
+      "kvFormula": "standard",
+      "kvCacheValuesPerLayer": 2048,
+      "kvBytesPerTokenBF16": 163840,
+      "kvBytesPerTokenFP8": 81920,
+      "weightsGB": {
+        "bf16": 47.14,
+        "fp8": 23.57,
+        "nvfp4": 13.26,
+        "mxfp4": 12.52
+      },
+      "source": "https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501/blob/main/config.json",
+      "notes": "Плотная модель: все параметры активны на каждый токен."
+    },
+    {
+      "id": "gemma-3-27b",
+      "name": "Gemma-3-27B-it (текстовая часть)",
+      "layers": 62,
+      "hidden": 5376,
+      "heads": 32,
+      "kvHeads": 16,
+      "headDim": 128,
+      "intermediate": 21504,
+      "vocab": 262208,
+      "maxPositionEmbeddings": 131072,
+      "paramsB": 27.009,
+      "activeParamsB": 27.009,
+      "activeParamsB_inclEmbedding": 27.009,
+      "activeMatmulParamsB": 27.008,
+      "attention": "GQA (32 Q / 16 KV); 5 local (sliding 1024) : 1 global; QK-norm",
+      "kvFormula": "swa-hybrid",
+      "kvCacheValuesPerLayer": 4096,
+      "kvBytesPerTokenBF16": 507904,
+      "kvBytesPerTokenFP8": 253952,
+      "weightsGB": {
+        "bf16": 54.02,
+        "fp8": 27.01,
+        "nvfp4": 15.19,
+        "mxfp4": 14.35
+      },
+      "source": "https://huggingface.co/unsloth/gemma-3-27b-it/blob/main/config.json (зеркало gated google/gemma-3-27b-it)",
+      "slidingWindow": {
+        "window": 1024,
+        "slidingLayers": 52,
+        "fullLayers": 10,
+        "kvBytesPerTokenBF16_fullLayersOnly": 81920,
+        "kvBytesSlidingLayersPerTokenBF16": 425984,
+        "formula": "KV(S) = S*fullLayersBytes + min(S, window)*slidingLayersBytes"
+      },
+      "notes": "kvBytesPerTokenBF16 — наивная оценка (все слои хранят весь контекст). Движок с поддержкой гибридного/sliding-window кэша хранит в sliding-слоях только последние window токенов."
+    }
+  ],
+  "checks": [
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-8B BF16, 1x H100",
+      "msPerToken": 4.794,
+      "maxTokPerSec": 208.6,
+      "bytesReadGB": 16.061
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-8B BF16, 1x H200",
+      "msPerToken": 3.346,
+      "maxTokPerSec": 298.9,
+      "bytesReadGB": 16.061
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-8B BF16, 1x B200",
+      "msPerToken": 2.008,
+      "maxTokPerSec": 498.1,
+      "bytesReadGB": 16.061
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-8B BF16, 1x L4",
+      "msPerToken": 53.535,
+      "maxTokPerSec": 18.7,
+      "bytesReadGB": 16.061
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-8B BF16, 1x RTX 4090",
+      "msPerToken": 15.933,
+      "maxTokPerSec": 62.8,
+      "bytesReadGB": 16.061
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-8B FP8, 1x H100",
+      "msPerToken": 2.397,
+      "maxTokPerSec": 417.2,
+      "bytesReadGB": 8.03
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-8B FP8, 1x L4",
+      "msPerToken": 26.768,
+      "maxTokPerSec": 37.4,
+      "bytesReadGB": 8.03
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-70B FP8, 1x H100",
+      "msPerToken": 21.061,
+      "maxTokPerSec": 47.5,
+      "bytesReadGB": 70.554
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-70B FP8, 2x H100 TP2",
+      "msPerToken": 10.53,
+      "maxTokPerSec": 95.0,
+      "bytesReadGB": 70.554
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-70B FP8, 4x H100 TP4",
+      "msPerToken": 5.265,
+      "maxTokPerSec": 189.9,
+      "bytesReadGB": 70.554
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-70B FP8, 8x H100 TP8",
+      "msPerToken": 2.633,
+      "maxTokPerSec": 379.9,
+      "bytesReadGB": 70.554
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-70B BF16, 4x H100 TP4",
+      "msPerToken": 10.53,
+      "maxTokPerSec": 95.0,
+      "bytesReadGB": 141.107
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-70B FP8, 1x H200",
+      "msPerToken": 14.699,
+      "maxTokPerSec": 68.0,
+      "bytesReadGB": 70.554
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-70B FP8, 1x B200",
+      "msPerToken": 8.819,
+      "maxTokPerSec": 113.4,
+      "bytesReadGB": 70.554
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-70B NVFP4, 1x B200",
+      "msPerToken": 4.961,
+      "maxTokPerSec": 201.6,
+      "bytesReadGB": 39.686
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-405B FP8, 8x H100 TP8",
+      "msPerToken": 15.144,
+      "maxTokPerSec": 66.0,
+      "bytesReadGB": 405.853
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-405B FP8, 8x H200 TP8",
+      "msPerToken": 10.569,
+      "maxTokPerSec": 94.6,
+      "bytesReadGB": 405.853
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Llama-3.1-405B FP8, 8x B200 TP8",
+      "msPerToken": 6.341,
+      "maxTokPerSec": 157.7,
+      "bytesReadGB": 405.853
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Qwen3-30B-A3B BF16 (active only), 1x H100",
+      "msPerToken": 2.002,
+      "maxTokPerSec": 499.5,
+      "bytesReadGB": 6.706
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): Qwen3-235B-A22B FP8 (active only), 8x H100 ideal spread",
+      "msPerToken": 0.828,
+      "maxTokPerSec": 1207.7,
+      "bytesReadGB": 22.191
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): DeepSeek-V3 FP8 (active only), 8x H200 ideal spread",
+      "msPerToken": 0.978,
+      "maxTokPerSec": 1022.6,
+      "bytesReadGB": 37.552
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): gpt-oss-120b native (active only), 1x H100",
+      "msPerToken": 1.493,
+      "maxTokPerSec": 669.6,
+      "bytesReadGB": 5.003
+    },
+    {
+      "what": "decode lower bound batch=1 (weights only): gpt-oss-20b native (active only), 1x RTX 4090",
+      "msPerToken": 3.679,
+      "maxTokPerSec": 271.8,
+      "bytesReadGB": 3.708
+    },
+    {
+      "what": "concurrent 8192-token sequences: Llama-3.1-8B BF16 on 1x H100",
+      "kvDtype": "bf16",
+      "weightsGiB": 14.96,
+      "kvBudgetGiB": 54.73,
+      "perSeqGiB": 1.0,
+      "maxSeqs": 54
+    },
+    {
+      "what": "concurrent 8192-token sequences: Llama-3.1-8B BF16 on 1x H100, FP8 KV",
+      "kvDtype": "fp8",
+      "weightsGiB": 14.96,
+      "kvBudgetGiB": 54.73,
+      "perSeqGiB": 0.5,
+      "maxSeqs": 109
+    },
+    {
+      "what": "concurrent 8192-token sequences: Llama-3.1-8B BF16 on 1x L4",
+      "kvDtype": "bf16",
+      "weightsGiB": 14.96,
+      "kvBudgetGiB": 3.29,
+      "perSeqGiB": 1.0,
+      "maxSeqs": 3
+    },
+    {
+      "what": "concurrent 8192-token sequences: Llama-3.1-8B FP8 on 1x L4",
+      "kvDtype": "bf16",
+      "weightsGiB": 7.48,
+      "kvBudgetGiB": 10.77,
+      "perSeqGiB": 1.0,
+      "maxSeqs": 10
+    },
+    {
+      "what": "concurrent 8192-token sequences: Llama-3.1-8B FP8 on 1x L4, FP8 KV",
+      "kvDtype": "fp8",
+      "weightsGiB": 7.48,
+      "kvBudgetGiB": 10.77,
+      "perSeqGiB": 0.5,
+      "maxSeqs": 21
+    },
+    {
+      "what": "concurrent 8192-token sequences: Llama-3.1-70B FP8 on 1x H100",
+      "kvDtype": "bf16",
+      "weightsGiB": 65.71,
+      "kvBudgetGiB": 3.97,
+      "perSeqGiB": 2.5,
+      "maxSeqs": 1
+    },
+    {
+      "what": "concurrent 8192-token sequences: Llama-3.1-70B FP8 on 1x H100, FP8 KV",
+      "kvDtype": "fp8",
+      "weightsGiB": 65.71,
+      "kvBudgetGiB": 3.97,
+      "perSeqGiB": 1.25,
+      "maxSeqs": 3
+    },
+    {
+      "what": "concurrent 8192-token sequences: Llama-3.1-70B FP8 on 2x H100 TP2",
+      "kvDtype": "bf16",
+      "weightsGiB": 65.71,
+      "kvBudgetGiB": 73.66,
+      "perSeqGiB": 2.5,
+      "maxSeqs": 29
+    },
+    {
+      "what": "concurrent 8192-token sequences: Llama-3.1-70B BF16 on 4x H100 TP4",
+      "kvDtype": "bf16",
+      "weightsGiB": 131.42,
+      "kvBudgetGiB": 147.31,
+      "perSeqGiB": 2.5,
+      "maxSeqs": 58
+    },
+    {
+      "what": "concurrent 8192-token sequences: Llama-3.1-70B BF16 on 8x H100 TP8",
+      "kvDtype": "bf16",
+      "weightsGiB": 131.42,
+      "kvBudgetGiB": 426.05,
+      "perSeqGiB": 2.5,
+      "maxSeqs": 170
+    },
+    {
+      "what": "concurrent 8192-token sequences: Llama-3.1-70B FP8 on 1x H200",
+      "kvDtype": "bf16",
+      "weightsGiB": 65.71,
+      "kvBudgetGiB": 58.65,
+      "perSeqGiB": 2.5,
+      "maxSeqs": 23
+    },
+    {
+      "what": "concurrent 8192-token sequences: Llama-3.1-70B FP8 on 1x H200, FP8 KV",
+      "kvDtype": "fp8",
+      "weightsGiB": 65.71,
+      "kvBudgetGiB": 58.65,
+      "perSeqGiB": 1.25,
+      "maxSeqs": 46
+    },
+    {
+      "what": "concurrent 8192-token sequences: Llama-3.1-70B FP8 on 1x B200",
+      "kvDtype": "bf16",
+      "weightsGiB": 65.71,
+      "kvBudgetGiB": 93.45,
+      "perSeqGiB": 2.5,
+      "maxSeqs": 37
+    },
+    {
+      "what": "concurrent 8192-token sequences: Llama-3.1-405B FP8 on 8x H100 TP8",
+      "kvDtype": "bf16",
+      "weightsGiB": 377.98,
+      "kvBudgetGiB": 179.48,
+      "perSeqGiB": 3.9375,
+      "maxSeqs": 45
+    },
+    {
+      "what": "concurrent 8192-token sequences: Llama-3.1-405B FP8 on 8x H100 TP8, FP8 KV",
+      "kvDtype": "fp8",
+      "weightsGiB": 377.98,
+      "kvBudgetGiB": 179.48,
+      "perSeqGiB": 1.9688,
+      "maxSeqs": 91
+    },
+    {
+      "what": "concurrent 8192-token sequences: Llama-3.1-405B FP8 on 8x H200 TP8",
+      "kvDtype": "bf16",
+      "weightsGiB": 377.98,
+      "kvBudgetGiB": 616.91,
+      "perSeqGiB": 3.9375,
+      "maxSeqs": 156
+    },
+    {
+      "what": "concurrent 8192-token sequences: Llama-3.1-405B FP8 on 8x B200 TP8",
+      "kvDtype": "bf16",
+      "weightsGiB": 377.98,
+      "kvBudgetGiB": 895.26,
+      "perSeqGiB": 3.9375,
+      "maxSeqs": 227
+    },
+    {
+      "what": "concurrent 8192-token sequences: Qwen3-235B-A22B FP8 on 8x H100 (если KV не дублируется)",
+      "kvDtype": "bf16",
+      "weightsGiB": 218.95,
+      "kvBudgetGiB": 338.51,
+      "perSeqGiB": 1.4688,
+      "maxSeqs": 230
+    },
+    {
+      "what": "concurrent 8192-token sequences: Qwen3-235B-A22B FP8 on 8x H100 TP8 (4 KV heads -> x2 дубли)",
+      "kvDtype": "bf16",
+      "weightsGiB": 218.95,
+      "kvBudgetGiB": 338.51,
+      "perSeqGiB": 2.9375,
+      "maxSeqs": 115
+    },
+    {
+      "what": "concurrent 8192-token sequences: DeepSeek-V3 FP8 on 8x H200, TP8 attention (latent KV дублируется x8)",
+      "kvDtype": "bf16",
+      "weightsGiB": 624.94,
+      "kvBudgetGiB": 369.95,
+      "perSeqGiB": 4.2891,
+      "maxSeqs": 86
+    },
+    {
+      "what": "concurrent 8192-token sequences: DeepSeek-V3 FP8 on 8x H200, DP-attention (без дублей)",
+      "kvDtype": "bf16",
+      "weightsGiB": 624.94,
+      "kvBudgetGiB": 369.95,
+      "perSeqGiB": 0.5361,
+      "maxSeqs": 690
+    },
+    {
+      "what": "concurrent 8192-token sequences: DeepSeek-V3 FP8 on 8x B200, DP-attention",
+      "kvDtype": "bf16",
+      "weightsGiB": 624.94,
+      "kvBudgetGiB": 648.3,
+      "perSeqGiB": 0.5361,
+      "maxSeqs": 1209
+    },
+    {
+      "what": "concurrent 8192-token sequences: gpt-oss-120b native MXFP4 on 1x H100 (SWA-aware)",
+      "kvDtype": "bf16",
+      "weightsGiB": 60.77,
+      "kvBudgetGiB": 8.92,
+      "perSeqGiB": 0.2856,
+      "maxSeqs": 31
+    },
+    {
+      "what": "concurrent 8192-token sequences: gpt-oss-20b native MXFP4 on 1x L4 (SWA-aware)",
+      "kvDtype": "bf16",
+      "weightsGiB": 12.82,
+      "kvBudgetGiB": 5.43,
+      "perSeqGiB": 0.1904,
+      "maxSeqs": 28
+    },
+    {
+      "what": "concurrent 8192-token sequences: Qwen3-30B-A3B BF16 on 1x H100",
+      "kvDtype": "bf16",
+      "weightsGiB": 56.87,
+      "kvBudgetGiB": 12.81,
+      "perSeqGiB": 0.75,
+      "maxSeqs": 17
+    },
+    {
+      "what": "concurrent 8192-token sequences: Qwen3-30B-A3B FP8 on 1x H100",
+      "kvDtype": "bf16",
+      "weightsGiB": 28.44,
+      "kvBudgetGiB": 41.25,
+      "perSeqGiB": 0.75,
+      "maxSeqs": 54
+    },
+    {
+      "what": "concurrent 8192-token sequences: Gemma-3-27B BF16 on 1x H100 (SWA-aware; +0.4B vision)",
+      "kvDtype": "bf16",
+      "weightsGiB": 51.05,
+      "kvBudgetGiB": 18.63,
+      "perSeqGiB": 1.0312,
+      "maxSeqs": 18
+    },
+    {
+      "what": "concurrent 8192-token sequences: Mistral-Small-24B FP8 on 1x L40S",
+      "kvDtype": "bf16",
+      "weightsGiB": 21.95,
+      "kvBudgetGiB": 16.54,
+      "perSeqGiB": 1.25,
+      "maxSeqs": 13
+    },
+    {
+      "what": "prefill ideal time llama-3.1-8b bf16 on 1x h100-sxm S=1024",
+      "linearFLOPs": 14295000000000.0,
+      "attentionFLOPs": 275150000000.0,
+      "idealMs": 14.73
+    },
+    {
+      "what": "prefill ideal time llama-3.1-8b bf16 on 1x h100-sxm S=8192",
+      "linearFLOPs": 114350000000000.0,
+      "attentionFLOPs": 17594000000000.0,
+      "idealMs": 133.41
+    },
+    {
+      "what": "prefill ideal time llama-3.1-8b bf16 on 1x h100-sxm S=32768",
+      "linearFLOPs": 457400000000000.0,
+      "attentionFLOPs": 281480000000000.0,
+      "idealMs": 747.1
+    },
+    {
+      "what": "prefill ideal time llama-3.1-8b fp8 on 1x h100-sxm S=1024",
+      "linearFLOPs": 14295000000000.0,
+      "attentionFLOPs": 275150000000.0,
+      "idealMs": 7.36
+    },
+    {
+      "what": "prefill ideal time llama-3.1-8b fp8 on 1x h100-sxm S=8192",
+      "linearFLOPs": 114350000000000.0,
+      "attentionFLOPs": 17594000000000.0,
+      "idealMs": 66.67
+    },
+    {
+      "what": "prefill ideal time llama-3.1-8b fp8 on 1x h100-sxm S=32768",
+      "linearFLOPs": 457400000000000.0,
+      "attentionFLOPs": 281480000000000.0,
+      "idealMs": 373.36
+    },
+    {
+      "what": "prefill ideal time llama-3.1-70b fp8 on 1x h100-sxm S=1024",
+      "linearFLOPs": 140190000000000.0,
+      "attentionFLOPs": 1375700000000.0,
+      "idealMs": 71.53
+    },
+    {
+      "what": "prefill ideal time llama-3.1-70b fp8 on 1x h100-sxm S=8192",
+      "linearFLOPs": 1121500000000000.0,
+      "attentionFLOPs": 87972000000000.0,
+      "idealMs": 611.15
+    },
+    {
+      "what": "prefill ideal time llama-3.1-70b fp8 on 1x h100-sxm S=32768",
+      "linearFLOPs": 4486000000000000.0,
+      "attentionFLOPs": 1407400000000000.0,
+      "idealMs": 2977.98
+    },
+    {
+      "what": "prefill ideal time llama-3.1-70b fp8 on 1x b200-hgx S=1024",
+      "linearFLOPs": 140190000000000.0,
+      "attentionFLOPs": 1375700000000.0,
+      "idealMs": 31.46
+    },
+    {
+      "what": "prefill ideal time llama-3.1-70b fp8 on 1x b200-hgx S=8192",
+      "linearFLOPs": 1121500000000000.0,
+      "attentionFLOPs": 87972000000000.0,
+      "idealMs": 268.77
+    },
+    {
+      "what": "prefill ideal time llama-3.1-70b fp8 on 1x b200-hgx S=32768",
+      "linearFLOPs": 4486000000000000.0,
+      "attentionFLOPs": 1407400000000000.0,
+      "idealMs": 1309.65
+    },
+    {
+      "what": "prefill ideal time llama-3.1-405b fp8 on 1x h100-sxm S=1024",
+      "linearFLOPs": 822580000000000.0,
+      "attentionFLOPs": 4333600000000.0,
+      "idealMs": 417.84
+    },
+    {
+      "what": "prefill ideal time llama-3.1-405b fp8 on 1x h100-sxm S=8192",
+      "linearFLOPs": 6580600000000000.0,
+      "attentionFLOPs": 277110000000000.0,
+      "idealMs": 3465.23
+    },
+    {
+      "what": "prefill ideal time llama-3.1-405b fp8 on 1x h100-sxm S=32768",
+      "linearFLOPs": 2.6322e+16,
+      "attentionFLOPs": 4433400000000000.0,
+      "idealMs": 15541.02
+    },
+    {
+      "what": "prefill ideal time qwen3-235b-a22b fp8 on 1x h100-sxm S=1024",
+      "linearFLOPs": 42897000000000.0,
+      "attentionFLOPs": 1616500000000.0,
+      "idealMs": 22.49
+    },
+    {
+      "what": "prefill ideal time qwen3-235b-a22b fp8 on 1x h100-sxm S=8192",
+      "linearFLOPs": 343170000000000.0,
+      "attentionFLOPs": 103370000000000.0,
+      "idealMs": 225.64
+    },
+    {
+      "what": "prefill ideal time qwen3-235b-a22b fp8 on 1x h100-sxm S=32768",
+      "linearFLOPs": 1372700000000000.0,
+      "attentionFLOPs": 1653700000000000.0,
+      "idealMs": 1529.25
+    },
+    {
+      "what": "prefill ideal time deepseek-v3 fp8 on 1x h200-sxm S=1024",
+      "linearFLOPs": 73111000000000.0,
+      "attentionFLOPs": 2622500000000.0,
+      "idealMs": 38.27
+    },
+    {
+      "what": "prefill ideal time deepseek-v3 fp8 on 1x h200-sxm S=8192",
+      "linearFLOPs": 584880000000000.0,
+      "attentionFLOPs": 167700000000000.0,
+      "idealMs": 380.28
+    },
+    {
+      "what": "prefill ideal time deepseek-v3 fp8 on 1x h200-sxm S=32768",
+      "linearFLOPs": 2339500000000000.0,
+      "attentionFLOPs": 2682900000000000.0,
+      "idealMs": 2537.85
+    },
+    {
+      "what": "prefill ideal time gpt-oss-120b bf16 on 1x h100-sxm S=1024",
+      "linearFLOPs": 9324200000000.0,
+      "attentionFLOPs": 191030000000.0,
+      "idealMs": 9.62
+    },
+    {
+      "what": "prefill ideal time gpt-oss-120b bf16 on 1x h100-sxm S=8192",
+      "linearFLOPs": 74585000000000.0,
+      "attentionFLOPs": 10204000000000.0,
+      "idealMs": 85.73
+    },
+    {
+      "what": "prefill ideal time gpt-oss-120b bf16 on 1x h100-sxm S=32768",
+      "linearFLOPs": 298340000000000.0,
+      "attentionFLOPs": 159570000000000.0,
+      "idealMs": 463.0
+    }
+  ]
+}

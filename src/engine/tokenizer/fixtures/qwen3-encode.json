@@ -1,0 +1,5463 @@
+{
+ "source": "tokenizers 0.23.3, research/vendor/qwen3/tokenizer.json",
+ "cases": [
+  {
+   "text": "Привет, мир!",
+   "ids": [
+    53645,
+    26991,
+    8178,
+    11,
+    137144,
+    0
+   ],
+   "offsets": [
+    [
+     0,
+     2
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     6,
+     7
+    ],
+    [
+     7,
+     11
+    ],
+    [
+     11,
+     12
+    ]
+   ],
+   "decoded": "Привет, мир!",
+   "decodedSkipSpecial": "Привет, мир!",
+   "pretokens": [
+    "Привет",
+    ",",
+    " мир",
+    "!"
+   ]
+  },
+  {
+   "text": "Hello, world!",
+   "ids": [
+    9707,
+    11,
+    1879,
+    0
+   ],
+   "offsets": [
+    [
+     0,
+     5
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     6,
+     12
+    ],
+    [
+     12,
+     13
+    ]
+   ],
+   "decoded": "Hello, world!",
+   "decodedSkipSpecial": "Hello, world!",
+   "pretokens": [
+    "Hello",
+    ",",
+    " world",
+    "!"
+   ]
+  },
+  {
+   "text": "Сколько будет 2+2?",
+   "ids": [
+    19311,
+    4793,
+    53470,
+    68823,
+    220,
+    17,
+    10,
+    17,
+    30
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     7
+    ],
+    [
+     7,
+     13
+    ],
+    [
+     13,
+     14
+    ],
+    [
+     14,
+     15
+    ],
+    [
+     15,
+     16
+    ],
+    [
+     16,
+     17
+    ],
+    [
+     17,
+     18
+    ]
+   ],
+   "decoded": "Сколько будет 2+2?",
+   "decodedSkipSpecial": "Сколько будет 2+2?",
+   "pretokens": [
+    "Сколько",
+    " будет",
+    " ",
+    "2",
+    "+",
+    "2",
+    "?"
+   ]
+  },
+  {
+   "text": "Объясни простыми словами, что такое KV cache и зачем он нужен.",
+   "ids": [
+    73239,
+    33594,
+    127023,
+    22621,
+    129020,
+    129129,
+    91107,
+    49707,
+    11,
+    47389,
+    134322,
+    84648,
+    6500,
+    7587,
+    43846,
+    127090,
+    98745,
+    75983,
+    5259,
+    13
+   ],
+   "offsets": [
+    [
+     0,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     5,
+     7
+    ],
+    [
+     7,
+     13
+    ],
+    [
+     13,
+     16
+    ],
+    [
+     16,
+     21
+    ],
+    [
+     21,
+     24
+    ],
+    [
+     24,
+     25
+    ],
+    [
+     25,
+     29
+    ],
+    [
+     29,
+     35
+    ],
+    [
+     35,
+     38
+    ],
+    [
+     38,
+     44
+    ],
+    [
+     44,
+     46
+    ],
+    [
+     46,
+     49
+    ],
+    [
+     49,
+     52
+    ],
+    [
+     52,
+     55
+    ],
+    [
+     55,
+     59
+    ],
+    [
+     59,
+     61
+    ],
+    [
+     61,
+     62
+    ]
+   ],
+   "decoded": "Объясни простыми словами, что такое KV cache и зачем он нужен.",
+   "decodedSkipSpecial": "Объясни простыми словами, что такое KV cache и зачем он нужен.",
+   "pretokens": [
+    "Объясни",
+    " простыми",
+    " словами",
+    ",",
+    " что",
+    " такое",
+    " KV",
+    " cache",
+    " и",
+    " зачем",
+    " он",
+    " нужен",
+    "."
+   ]
+  },
+  {
+   "text": "12345678",
+   "ids": [
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     6,
+     7
+    ],
+    [
+     7,
+     8
+    ]
+   ],
+   "decoded": "12345678",
+   "decodedSkipSpecial": "12345678",
+   "pretokens": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8"
+   ]
+  },
+  {
+   "text": "2025-11-12",
+   "ids": [
+    17,
+    15,
+    17,
+    20,
+    12,
+    16,
+    16,
+    12,
+    16,
+    17
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     6,
+     7
+    ],
+    [
+     7,
+     8
+    ],
+    [
+     8,
+     9
+    ],
+    [
+     9,
+     10
+    ]
+   ],
+   "decoded": "2025-11-12",
+   "decodedSkipSpecial": "2025-11-12",
+   "pretokens": [
+    "2",
+    "0",
+    "2",
+    "5",
+    "-",
+    "1",
+    "1",
+    "-",
+    "1",
+    "2"
+   ]
+  },
+  {
+   "text": "3.14159 и -42, а также 1e10",
+   "ids": [
+    18,
+    13,
+    16,
+    19,
+    16,
+    20,
+    24,
+    7587,
+    481,
+    19,
+    17,
+    11,
+    20396,
+    128547,
+    220,
+    16,
+    68,
+    16,
+    15
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     6,
+     7
+    ],
+    [
+     7,
+     9
+    ],
+    [
+     9,
+     11
+    ],
+    [
+     11,
+     12
+    ],
+    [
+     12,
+     13
+    ],
+    [
+     13,
+     14
+    ],
+    [
+     14,
+     16
+    ],
+    [
+     16,
+     22
+    ],
+    [
+     22,
+     23
+    ],
+    [
+     23,
+     24
+    ],
+    [
+     24,
+     25
+    ],
+    [
+     25,
+     26
+    ],
+    [
+     26,
+     27
+    ]
+   ],
+   "decoded": "3.14159 и -42, а также 1e10",
+   "decodedSkipSpecial": "3.14159 и -42, а также 1e10",
+   "pretokens": [
+    "3",
+    ".",
+    "1",
+    "4",
+    "1",
+    "5",
+    "9",
+    " и",
+    " -",
+    "4",
+    "2",
+    ",",
+    " а",
+    " также",
+    " ",
+    "1",
+    "e",
+    "1",
+    "0"
+   ]
+  },
+  {
+   "text": "🙂🤖",
+   "ids": [
+    145080,
+    147238
+   ],
+   "offsets": [
+    [
+     0,
+     2
+    ],
+    [
+     2,
+     4
+    ]
+   ],
+   "decoded": "🙂🤖",
+   "decodedSkipSpecial": "🙂🤖",
+   "pretokens": [
+    "🙂🤖"
+   ]
+  },
+  {
+   "text": "👍🏽 эмодзи с модификатором тона",
+   "ids": [
+    144349,
+    145375,
+    20928,
+    6442,
+    9516,
+    128652,
+    5409,
+    70139,
+    61709,
+    37722,
+    57306,
+    12228,
+    58246,
+    14191
+   ],
+   "offsets": [
+    [
+     0,
+     2
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     6,
+     7
+    ],
+    [
+     7,
+     9
+    ],
+    [
+     9,
+     11
+    ],
+    [
+     11,
+     13
+    ],
+    [
+     13,
+     17
+    ],
+    [
+     17,
+     19
+    ],
+    [
+     19,
+     21
+    ],
+    [
+     21,
+     25
+    ],
+    [
+     25,
+     27
+    ],
+    [
+     27,
+     30
+    ],
+    [
+     30,
+     32
+    ]
+   ],
+   "decoded": "👍🏽 эмодзи с модификатором тона",
+   "decodedSkipSpecial": "👍🏽 эмодзи с модификатором тона",
+   "pretokens": [
+    "👍🏽",
+    " эмодзи",
+    " с",
+    " модификатором",
+    " тона"
+   ]
+  },
+  {
+   "text": "👨‍👩‍👧‍👦 и флаг 🇷🇺",
+   "ids": [
+    145367,
+    378,
+    235,
+    145233,
+    378,
+    235,
+    145665,
+    378,
+    235,
+    145988,
+    7587,
+    17574,
+    126948,
+    11162,
+    229,
+    115,
+    145526
+   ],
+   "offsets": [
+    [
+     0,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     8,
+     9
+    ],
+    [
+     8,
+     9
+    ],
+    [
+     9,
+     11
+    ],
+    [
+     11,
+     13
+    ],
+    [
+     13,
+     15
+    ],
+    [
+     15,
+     18
+    ],
+    [
+     18,
+     21
+    ],
+    [
+     19,
+     21
+    ],
+    [
+     19,
+     21
+    ],
+    [
+     21,
+     23
+    ]
+   ],
+   "decoded": "👨‍👩‍👧‍👦 и флаг 🇷🇺",
+   "decodedSkipSpecial": "👨‍👩‍👧‍👦 и флаг 🇷🇺",
+   "pretokens": [
+    "👨‍👩‍👧‍👦",
+    " и",
+    " флаг",
+    " 🇷🇺"
+   ]
+  },
+  {
+   "text": "家族 日本語のテキスト 中文",
+   "ids": [
+    104688,
+    75402,
+    21894,
+    102819,
+    15767,
+    56833,
+    61803,
+    70534,
+    72858,
+    16744
+   ],
+   "offsets": [
+    [
+     0,
+     2
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     6,
+     7
+    ],
+    [
+     7,
+     8
+    ],
+    [
+     8,
+     9
+    ],
+    [
+     9,
+     11
+    ],
+    [
+     11,
+     13
+    ],
+    [
+     13,
+     14
+    ]
+   ],
+   "decoded": "家族 日本語のテキスト 中文",
+   "decodedSkipSpecial": "家族 日本語のテキスト 中文",
+   "pretokens": [
+    "家族",
+    " 日本語のテキスト",
+    " 中文"
+   ]
+  },
+  {
+   "text": "def f(x):\n    return x*2\n",
+   "ids": [
+    750,
+    282,
+    2075,
+    982,
+    262,
+    470,
+    856,
+    9,
+    17,
+    198
+   ],
+   "offsets": [
+    [
+     0,
+     3
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     5,
+     7
+    ],
+    [
+     7,
+     10
+    ],
+    [
+     10,
+     13
+    ],
+    [
+     13,
+     20
+    ],
+    [
+     20,
+     22
+    ],
+    [
+     22,
+     23
+    ],
+    [
+     23,
+     24
+    ],
+    [
+     24,
+     25
+    ]
+   ],
+   "decoded": "def f(x):\n    return x*2\n",
+   "decodedSkipSpecial": "def f(x):\n    return x*2\n",
+   "pretokens": [
+    "def",
+    " f",
+    "(x",
+    "):\n",
+    "   ",
+    " return",
+    " x",
+    "*",
+    "2",
+    "\n"
+   ]
+  },
+  {
+   "text": "class A:\n\tdef m(self):\n\t\tpass",
+   "ids": [
+    1040,
+    362,
+    510,
+    7452,
+    296,
+    1193,
+    982,
+    197,
+    41431
+   ],
+   "offsets": [
+    [
+     0,
+     5
+    ],
+    [
+     5,
+     7
+    ],
+    [
+     7,
+     9
+    ],
+    [
+     9,
+     13
+    ],
+    [
+     13,
+     15
+    ],
+    [
+     15,
+     20
+    ],
+    [
+     20,
+     23
+    ],
+    [
+     23,
+     24
+    ],
+    [
+     24,
+     29
+    ]
+   ],
+   "decoded": "class A:\n\tdef m(self):\n\t\tpass",
+   "decodedSkipSpecial": "class A:\n\tdef m(self):\n\t\tpass",
+   "pretokens": [
+    "class",
+    " A",
+    ":\n",
+    "\tdef",
+    " m",
+    "(self",
+    "):\n",
+    "\t",
+    "\tpass"
+   ]
+  },
+  {
+   "text": "    indented code\n        deeper\n",
+   "ids": [
+    262,
+    1257,
+    15864,
+    2038,
+    198,
+    286,
+    19117,
+    198
+   ],
+   "offsets": [
+    [
+     0,
+     3
+    ],
+    [
+     3,
+     7
+    ],
+    [
+     7,
+     12
+    ],
+    [
+     12,
+     17
+    ],
+    [
+     17,
+     18
+    ],
+    [
+     18,
+     25
+    ],
+    [
+     25,
+     32
+    ],
+    [
+     32,
+     33
+    ]
+   ],
+   "decoded": "    indented code\n        deeper\n",
+   "decodedSkipSpecial": "    indented code\n        deeper\n",
+   "pretokens": [
+    "   ",
+    " indented",
+    " code",
+    "\n",
+    "       ",
+    " deeper",
+    "\n"
+   ]
+  },
+  {
+   "text": "\n\n",
+   "ids": [
+    271
+   ],
+   "offsets": [
+    [
+     0,
+     2
+    ]
+   ],
+   "decoded": "\n\n",
+   "decodedSkipSpecial": "\n\n",
+   "pretokens": [
+    "\n\n"
+   ]
+  },
+  {
+   "text": "line1\r\nline2\r\n",
+   "ids": [
+    1056,
+    16,
+    319,
+    1056,
+    17,
+    319
+   ],
+   "offsets": [
+    [
+     0,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     7
+    ],
+    [
+     7,
+     11
+    ],
+    [
+     11,
+     12
+    ],
+    [
+     12,
+     14
+    ]
+   ],
+   "decoded": "line1\r\nline2\r\n",
+   "decodedSkipSpecial": "line1\r\nline2\r\n",
+   "pretokens": [
+    "line",
+    "1",
+    "\r\n",
+    "line",
+    "2",
+    "\r\n"
+   ]
+  },
+  {
+   "text": "  four  spaces",
+   "ids": [
+    220,
+    3040,
+    220,
+    12621
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     6
+    ],
+    [
+     6,
+     7
+    ],
+    [
+     7,
+     14
+    ]
+   ],
+   "decoded": "  four  spaces",
+   "decodedSkipSpecial": "  four  spaces",
+   "pretokens": [
+    " ",
+    " four",
+    " ",
+    " spaces"
+   ]
+  },
+  {
+   "text": "trailing spaces   ",
+   "ids": [
+    376,
+    14277,
+    12621,
+    262
+   ],
+   "offsets": [
+    [
+     0,
+     2
+    ],
+    [
+     2,
+     8
+    ],
+    [
+     8,
+     15
+    ],
+    [
+     15,
+     18
+    ]
+   ],
+   "decoded": "trailing spaces   ",
+   "decodedSkipSpecial": "trailing spaces   ",
+   "pretokens": [
+    "trailing",
+    " spaces",
+    "   "
+   ]
+  },
+  {
+   "text": "!!!???...;;;",
+   "ids": [
+    12069,
+    33015,
+    1112,
+    36328
+   ],
+   "offsets": [
+    [
+     0,
+     3
+    ],
+    [
+     3,
+     6
+    ],
+    [
+     6,
+     9
+    ],
+    [
+     9,
+     12
+    ]
+   ],
+   "decoded": "!!!???...;;;",
+   "decodedSkipSpecial": "!!!???...;;;",
+   "pretokens": [
+    "!!!???...;;;"
+   ]
+  },
+  {
+   "text": "I'm DON'T we'll they've she'd you're IT'S",
+   "ids": [
+    40,
+    2776,
+    44273,
+    17323,
+    582,
+    3278,
+    807,
+    3003,
+    1340,
+    4172,
+    498,
+    2299,
+    8700,
+    13272
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     3,
+     7
+    ],
+    [
+     7,
+     9
+    ],
+    [
+     9,
+     12
+    ],
+    [
+     12,
+     15
+    ],
+    [
+     15,
+     20
+    ],
+    [
+     20,
+     23
+    ],
+    [
+     23,
+     27
+    ],
+    [
+     27,
+     29
+    ],
+    [
+     29,
+     33
+    ],
+    [
+     33,
+     36
+    ],
+    [
+     36,
+     39
+    ],
+    [
+     39,
+     41
+    ]
+   ],
+   "decoded": "I'm DON'T we'll they've she'd you're IT'S",
+   "decodedSkipSpecial": "I'm DON'T we'll they've she'd you're IT'S",
+   "pretokens": [
+    "I",
+    "'m",
+    " DON",
+    "'T",
+    " we",
+    "'ll",
+    " they",
+    "'ve",
+    " she",
+    "'d",
+    " you",
+    "'re",
+    " IT",
+    "'S"
+   ]
+  },
+  {
+   "text": "it'ſ ſtrange",
+   "ids": [
+    275,
+    6,
+    144815,
+    25917,
+    123,
+    376,
+    844
+   ],
+   "offsets": [
+    [
+     0,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     8,
+     12
+    ]
+   ],
+   "decoded": "it'ſ ſtrange",
+   "decodedSkipSpecial": "it'ſ ſtrange",
+   "pretokens": [
+    "it",
+    "'ſ",
+    " ſtrange"
+   ]
+  },
+  {
+   "text": "I'm  learning LLMs in 2025!!\n\nПривет, мир 12345",
+   "ids": [
+    40,
+    2776,
+    220,
+    6832,
+    444,
+    10994,
+    82,
+    304,
+    220,
+    17,
+    15,
+    17,
+    20,
+    24796,
+    53645,
+    26991,
+    8178,
+    11,
+    137144,
+    220,
+    16,
+    17,
+    18,
+    19,
+    20
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     13
+    ],
+    [
+     13,
+     15
+    ],
+    [
+     15,
+     17
+    ],
+    [
+     17,
+     18
+    ],
+    [
+     18,
+     21
+    ],
+    [
+     21,
+     22
+    ],
+    [
+     22,
+     23
+    ],
+    [
+     23,
+     24
+    ],
+    [
+     24,
+     25
+    ],
+    [
+     25,
+     26
+    ],
+    [
+     26,
+     30
+    ],
+    [
+     30,
+     32
+    ],
+    [
+     32,
+     34
+    ],
+    [
+     34,
+     36
+    ],
+    [
+     36,
+     37
+    ],
+    [
+     37,
+     41
+    ],
+    [
+     41,
+     42
+    ],
+    [
+     42,
+     43
+    ],
+    [
+     43,
+     44
+    ],
+    [
+     44,
+     45
+    ],
+    [
+     45,
+     46
+    ],
+    [
+     46,
+     47
+    ]
+   ],
+   "decoded": "I'm  learning LLMs in 2025!!\n\nПривет, мир 12345",
+   "decodedSkipSpecial": "I'm  learning LLMs in 2025!!\n\nПривет, мир 12345",
+   "pretokens": [
+    "I",
+    "'m",
+    " ",
+    " learning",
+    " LLMs",
+    " in",
+    " ",
+    "2",
+    "0",
+    "2",
+    "5",
+    "!!\n\n",
+    "Привет",
+    ",",
+    " мир",
+    " ",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5"
+   ]
+  },
+  {
+   "text": "HelloWorld camelCase JSONParser",
+   "ids": [
+    9707,
+    10134,
+    49152,
+    4207,
+    4718,
+    6570
+   ],
+   "offsets": [
+    [
+     0,
+     5
+    ],
+    [
+     5,
+     10
+    ],
+    [
+     10,
+     16
+    ],
+    [
+     16,
+     20
+    ],
+    [
+     20,
+     25
+    ],
+    [
+     25,
+     31
+    ]
+   ],
+   "decoded": "HelloWorld camelCase JSONParser",
+   "decodedSkipSpecial": "HelloWorld camelCase JSONParser",
+   "pretokens": [
+    "HelloWorld",
+    " camelCase",
+    " JSONParser"
+   ]
+  },
+  {
+   "text": "{\"name\": \"Иван\", \"age\": 42}",
+   "ids": [
+    4913,
+    606,
+    788,
+    330,
+    30174,
+    129751,
+    497,
+    330,
+    424,
+    788,
+    220,
+    19,
+    17,
+    92
+   ],
+   "offsets": [
+    [
+     0,
+     2
+    ],
+    [
+     2,
+     6
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     8,
+     10
+    ],
+    [
+     10,
+     11
+    ],
+    [
+     11,
+     14
+    ],
+    [
+     14,
+     16
+    ],
+    [
+     16,
+     18
+    ],
+    [
+     18,
+     21
+    ],
+    [
+     21,
+     23
+    ],
+    [
+     23,
+     24
+    ],
+    [
+     24,
+     25
+    ],
+    [
+     25,
+     26
+    ],
+    [
+     26,
+     27
+    ]
+   ],
+   "decoded": "{\"name\": \"Иван\", \"age\": 42}",
+   "decodedSkipSpecial": "{\"name\": \"Иван\", \"age\": 42}",
+   "pretokens": [
+    "{\"",
+    "name",
+    "\":",
+    " \"",
+    "Иван",
+    "\",",
+    " \"",
+    "age",
+    "\":",
+    " ",
+    "4",
+    "2",
+    "}"
+   ]
+  },
+  {
+   "text": " tokenization",
+   "ids": [
+    3950,
+    2022
+   ],
+   "offsets": [
+    [
+     0,
+     6
+    ],
+    [
+     6,
+     13
+    ]
+   ],
+   "decoded": " tokenization",
+   "decodedSkipSpecial": " tokenization",
+   "pretokens": [
+    " tokenization"
+   ]
+  },
+  {
+   "text": " полезный",
+   "ids": [
+    28519,
+    31885,
+    33513
+   ],
+   "offsets": [
+    [
+     0,
+     4
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     6,
+     9
+    ]
+   ],
+   "decoded": " полезный",
+   "decodedSkipSpecial": " полезный",
+   "pretokens": [
+    " полезный"
+   ]
+  },
+  {
+   "text": "ё Ё й Й",
+   "ids": [
+    44022,
+    1278,
+    223,
+    1278,
+    117,
+    1278,
+    247
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     7
+    ],
+    [
+     6,
+     7
+    ]
+   ],
+   "decoded": "ё Ё й Й",
+   "decodedSkipSpecial": "ё Ё й Й",
+   "pretokens": [
+    "ё",
+    " Ё",
+    " й",
+    " Й"
+   ]
+  },
+  {
+   "text": "й из двух кодпоинтов: й и Café",
+   "ids": [
+    12141,
+    23064,
+    132006,
+    68026,
+    128364,
+    18943,
+    126482,
+    25,
+    1278,
+    117,
+    7587,
+    65671
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     4,
+     9
+    ],
+    [
+     9,
+     13
+    ],
+    [
+     13,
+     15
+    ],
+    [
+     15,
+     17
+    ],
+    [
+     17,
+     20
+    ],
+    [
+     20,
+     21
+    ],
+    [
+     21,
+     23
+    ],
+    [
+     22,
+     23
+    ],
+    [
+     24,
+     26
+    ],
+    [
+     26,
+     31
+    ]
+   ],
+   "decoded": "й из двух кодпоинтов: й и Café",
+   "decodedSkipSpecial": "й из двух кодпоинтов: й и Café",
+   "pretokens": [
+    "й",
+    " из",
+    " двух",
+    " кодпоинтов",
+    ":",
+    " й",
+    " и",
+    " Café"
+   ]
+  },
+  {
+   "text": "Tab\there\tand nbsp em-space",
+   "ids": [
+    8582,
+    197,
+    6739,
+    52477,
+    4102,
+    5674,
+    378,
+    225,
+    336,
+    27947
+   ],
+   "offsets": [
+    [
+     0,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     8
+    ],
+    [
+     8,
+     12
+    ],
+    [
+     12,
+     13
+    ],
+    [
+     13,
+     17
+    ],
+    [
+     17,
+     18
+    ],
+    [
+     17,
+     18
+    ],
+    [
+     18,
+     20
+    ],
+    [
+     20,
+     26
+    ]
+   ],
+   "decoded": "Tab\there\tand nbsp em-space",
+   "decodedSkipSpecial": "Tab\there\tand nbsp em-space",
+   "pretokens": [
+    "Tab",
+    "\there",
+    "\tand",
+    " nbsp",
+    " em",
+    "-space"
+   ]
+  },
+  {
+   "text": "NEL и ﻿BOM",
+   "ids": [
+    126,
+    227,
+    81851,
+    7587,
+    75780,
+    33,
+    1898
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     8,
+     9
+    ],
+    [
+     9,
+     11
+    ]
+   ],
+   "decoded": "NEL и ﻿BOM",
+   "decodedSkipSpecial": "NEL и ﻿BOM",
+   "pretokens": [
+    "NEL",
+    " и",
+    " ﻿",
+    "BOM"
+   ]
+  },
+  {
+   "text": "a b a ﻿b a  b a 　b a  b",
+   "ids": [
+    64,
+    220,
+    126,
+    227,
+    65,
+    264,
+    75780,
+    65,
+    264,
+    220,
+    378,
+    101,
+    65,
+    264,
+    220,
+    22441,
+    65,
+    264,
+    220,
+    4102,
+    65
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     8,
+     9
+    ],
+    [
+     9,
+     11
+    ],
+    [
+     11,
+     12
+    ],
+    [
+     12,
+     13
+    ],
+    [
+     12,
+     13
+    ],
+    [
+     13,
+     14
+    ],
+    [
+     14,
+     16
+    ],
+    [
+     16,
+     17
+    ],
+    [
+     17,
+     18
+    ],
+    [
+     18,
+     19
+    ],
+    [
+     19,
+     21
+    ],
+    [
+     21,
+     22
+    ],
+    [
+     22,
+     23
+    ],
+    [
+     23,
+     24
+    ]
+   ],
+   "decoded": "a b a ﻿b a  b a 　b a  b",
+   "decodedSkipSpecial": "a b a ﻿b a  b a 　b a  b",
+   "pretokens": [
+    "a",
+    " ",
+    "b",
+    " a",
+    " ﻿",
+    "b",
+    " a",
+    " ",
+    " b",
+    " a",
+    " ",
+    "　b",
+    " a",
+    " ",
+    " b"
+   ]
+  },
+  {
+   "text": "\n﻿﻿\n",
+   "ids": [
+    126,
+    227,
+    126,
+    227,
+    198,
+    3225,
+    61519
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     6
+    ]
+   ],
+   "decoded": "\n﻿﻿\n",
+   "decodedSkipSpecial": "\n﻿﻿\n",
+   "pretokens": [
+    "\n",
+    "﻿﻿\n"
+   ]
+  },
+  {
+   "text": "﻿BOM в начале строки",
+   "ids": [
+    3225,
+    33,
+    1898,
+    5805,
+    129971,
+    1504,
+    92714
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     6,
+     12
+    ],
+    [
+     12,
+     13
+    ],
+    [
+     13,
+     20
+    ]
+   ],
+   "decoded": "﻿BOM в начале строки",
+   "decodedSkipSpecial": "﻿BOM в начале строки",
+   "pretokens": [
+    "﻿BOM",
+    " в",
+    " начале",
+    " строки"
+   ]
+  },
+  {
+   "text": "مرحبا بالعالم",
+   "ids": [
+    124122,
+    29825,
+    124671,
+    124476,
+    129634
+   ],
+   "offsets": [
+    [
+     0,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     5,
+     9
+    ],
+    [
+     9,
+     13
+    ]
+   ],
+   "decoded": "مرحبا بالعالم",
+   "decodedSkipSpecial": "مرحبا بالعالم",
+   "pretokens": [
+    "مرحبا",
+    " بالعالم"
+   ]
+  },
+  {
+   "text": "Ünïcödé façade naïve",
+   "ids": [
+    52491,
+    77,
+    37572,
+    66,
+    2956,
+    128505,
+    94872,
+    1021,
+    94880,
+    586
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     7
+    ],
+    [
+     7,
+     11
+    ],
+    [
+     11,
+     14
+    ],
+    [
+     14,
+     18
+    ],
+    [
+     18,
+     20
+    ]
+   ],
+   "decoded": "Ünïcödé façade naïve",
+   "decodedSkipSpecial": "Ünïcödé façade naïve",
+   "pretokens": [
+    "Ünïcödé",
+    " façade",
+    " naïve"
+   ]
+  },
+  {
+   "text": "https://example.com/path?query=1&b=2#frag",
+   "ids": [
+    2428,
+    1110,
+    8687,
+    905,
+    50976,
+    30,
+    1631,
+    28,
+    16,
+    5,
+    65,
+    28,
+    17,
+    2,
+    33198
+   ],
+   "offsets": [
+    [
+     0,
+     5
+    ],
+    [
+     5,
+     8
+    ],
+    [
+     8,
+     15
+    ],
+    [
+     15,
+     19
+    ],
+    [
+     19,
+     24
+    ],
+    [
+     24,
+     25
+    ],
+    [
+     25,
+     30
+    ],
+    [
+     30,
+     31
+    ],
+    [
+     31,
+     32
+    ],
+    [
+     32,
+     33
+    ],
+    [
+     33,
+     34
+    ],
+    [
+     34,
+     35
+    ],
+    [
+     35,
+     36
+    ],
+    [
+     36,
+     37
+    ],
+    [
+     37,
+     41
+    ]
+   ],
+   "decoded": "https://example.com/path?query=1&b=2#frag",
+   "decodedSkipSpecial": "https://example.com/path?query=1&b=2#frag",
+   "pretokens": [
+    "https",
+    "://",
+    "example",
+    ".com",
+    "/path",
+    "?query",
+    "=",
+    "1",
+    "&b",
+    "=",
+    "2",
+    "#frag"
+   ]
+  },
+  {
+   "text": "Ŀ ŀ ł Ń Ġ Ċ",
+   "ids": [
+    148215,
+    25917,
+    222,
+    74427,
+    25917,
+    225,
+    9843,
+    254,
+    9843,
+    232
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     5,
+     7
+    ],
+    [
+     6,
+     7
+    ],
+    [
+     7,
+     9
+    ],
+    [
+     8,
+     9
+    ],
+    [
+     9,
+     11
+    ],
+    [
+     10,
+     11
+    ]
+   ],
+   "decoded": "Ŀ ŀ ł Ń Ġ Ċ",
+   "decodedSkipSpecial": "Ŀ ŀ ł Ń Ġ Ċ",
+   "pretokens": [
+    "Ŀ",
+    " ŀ",
+    " ł",
+    " Ń",
+    " Ġ",
+    " Ċ"
+   ]
+  },
+  {
+   "text": "x​y",
+   "ids": [
+    87,
+    15692,
+    88
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     3
+    ]
+   ],
+   "decoded": "x​y",
+   "decodedSkipSpecial": "x​y",
+   "pretokens": [
+    "x",
+    "​y"
+   ]
+  },
+  {
+   "text": "٣٤٥ ⅫⅩ ½",
+   "ids": [
+    149,
+    96,
+    149,
+    97,
+    149,
+    98,
+    220,
+    70467,
+    104,
+    70467,
+    102,
+    220,
+    26062
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     5,
+     6
+    ],
+    [
+     6,
+     7
+    ],
+    [
+     7,
+     8
+    ]
+   ],
+   "decoded": "٣٤٥ ⅫⅩ ½",
+   "decodedSkipSpecial": "٣٤٥ ⅫⅩ ½",
+   "pretokens": [
+    "٣",
+    "٤",
+    "٥",
+    " ",
+    "Ⅻ",
+    "Ⅹ",
+    " ",
+    "½"
+   ]
+  },
+  {
+   "text": "ＡＢＣ　全角",
+   "ids": [
+    133054,
+    139173,
+    134557,
+    22441,
+    35987,
+    63836
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     6
+    ]
+   ],
+   "decoded": "ＡＢＣ　全角",
+   "decodedSkipSpecial": "ＡＢＣ　全角",
+   "pretokens": [
+    "ＡＢＣ",
+    "　全角"
+   ]
+  },
+  {
+   "text": "Модель Qwen3-8B: 36 слоёв, 32 головы, KV 144 КиБ/токен.",
+   "ids": [
+    37991,
+    9516,
+    25428,
+    1207,
+    16948,
+    18,
+    12,
+    23,
+    33,
+    25,
+    220,
+    18,
+    21,
+    34775,
+    1456,
+    44022,
+    5474,
+    11,
+    220,
+    18,
+    17,
+    132169,
+    4552,
+    11,
+    84648,
+    220,
+    16,
+    19,
+    19,
+    127465,
+    60332,
+    14,
+    130796,
+    5259,
+    13
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     3,
+     6
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     8,
+     11
+    ],
+    [
+     11,
+     12
+    ],
+    [
+     12,
+     13
+    ],
+    [
+     13,
+     14
+    ],
+    [
+     14,
+     15
+    ],
+    [
+     15,
+     16
+    ],
+    [
+     16,
+     17
+    ],
+    [
+     17,
+     18
+    ],
+    [
+     18,
+     19
+    ],
+    [
+     19,
+     22
+    ],
+    [
+     22,
+     23
+    ],
+    [
+     23,
+     24
+    ],
+    [
+     24,
+     25
+    ],
+    [
+     25,
+     26
+    ],
+    [
+     26,
+     27
+    ],
+    [
+     27,
+     28
+    ],
+    [
+     28,
+     29
+    ],
+    [
+     29,
+     35
+    ],
+    [
+     35,
+     36
+    ],
+    [
+     36,
+     37
+    ],
+    [
+     37,
+     40
+    ],
+    [
+     40,
+     41
+    ],
+    [
+     41,
+     42
+    ],
+    [
+     42,
+     43
+    ],
+    [
+     43,
+     44
+    ],
+    [
+     44,
+     47
+    ],
+    [
+     47,
+     48
+    ],
+    [
+     48,
+     49
+    ],
+    [
+     49,
+     52
+    ],
+    [
+     52,
+     54
+    ],
+    [
+     54,
+     55
+    ]
+   ],
+   "decoded": "Модель Qwen3-8B: 36 слоёв, 32 головы, KV 144 КиБ/токен.",
+   "decodedSkipSpecial": "Модель Qwen3-8B: 36 слоёв, 32 головы, KV 144 КиБ/токен.",
+   "pretokens": [
+    "Модель",
+    " Qwen",
+    "3",
+    "-",
+    "8",
+    "B",
+    ":",
+    " ",
+    "3",
+    "6",
+    " слоёв",
+    ",",
+    " ",
+    "3",
+    "2",
+    " головы",
+    ",",
+    " KV",
+    " ",
+    "1",
+    "4",
+    "4",
+    " КиБ",
+    "/токен",
+    "."
+   ]
+  },
+  {
+   "text": "Pneumonoultramicroscopicsilicovolcanoconiosis",
+   "ids": [
+    47,
+    811,
+    372,
+    263,
+    10965,
+    97940,
+    2754,
+    2388,
+    453,
+    1211,
+    321,
+    292,
+    859,
+    337,
+    68277,
+    443,
+    90160
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     5,
+     7
+    ],
+    [
+     7,
+     10
+    ],
+    [
+     10,
+     14
+    ],
+    [
+     14,
+     18
+    ],
+    [
+     18,
+     20
+    ],
+    [
+     20,
+     22
+    ],
+    [
+     22,
+     25
+    ],
+    [
+     25,
+     27
+    ],
+    [
+     27,
+     29
+    ],
+    [
+     29,
+     31
+    ],
+    [
+     31,
+     33
+    ],
+    [
+     33,
+     37
+    ],
+    [
+     37,
+     40
+    ],
+    [
+     40,
+     45
+    ]
+   ],
+   "decoded": "Pneumonoultramicroscopicsilicovolcanoconiosis",
+   "decodedSkipSpecial": "Pneumonoultramicroscopicsilicovolcanoconiosis",
+   "pretokens": [
+    "Pneumonoultramicroscopicsilicovolcanoconiosis"
+   ]
+  },
+  {
+   "text": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+   "ids": [
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440,
+    69440
+   ],
+   "offsets": [
+    [
+     0,
+     8
+    ],
+    [
+     8,
+     16
+    ],
+    [
+     16,
+     24
+    ],
+    [
+     24,
+     32
+    ],
+    [
+     32,
+     40
+    ],
+    [
+     40,
+     48
+    ],
+    [
+     48,
+     56
+    ],
+    [
+     56,
+     64
+    ],
+    [
+     64,
+     72
+    ],
+    [
+     72,
+     80
+    ],
+    [
+     80,
+     88
+    ],
+    [
+     88,
+     96
+    ],
+    [
+     96,
+     104
+    ],
+    [
+     104,
+     112
+    ],
+    [
+     112,
+     120
+    ],
+    [
+     120,
+     128
+    ],
+    [
+     128,
+     136
+    ],
+    [
+     136,
+     144
+    ],
+    [
+     144,
+     152
+    ],
+    [
+     152,
+     160
+    ],
+    [
+     160,
+     168
+    ],
+    [
+     168,
+     176
+    ],
+    [
+     176,
+     184
+    ],
+    [
+     184,
+     192
+    ],
+    [
+     192,
+     200
+    ],
+    [
+     200,
+     208
+    ],
+    [
+     208,
+     216
+    ],
+    [
+     216,
+     224
+    ],
+    [
+     224,
+     232
+    ],
+    [
+     232,
+     240
+    ],
+    [
+     240,
+     248
+    ],
+    [
+     248,
+     256
+    ],
+    [
+     256,
+     264
+    ],
+    [
+     264,
+     272
+    ],
+    [
+     272,
+     280
+    ],
+    [
+     280,
+     288
+    ],
+    [
+     288,
+     296
+    ],
+    [
+     296,
+     304
+    ],
+    [
+     304,
+     312
+    ],
+    [
+     312,
+     320
+    ],
+    [
+     320,
+     328
+    ],
+    [
+     328,
+     336
+    ],
+    [
+     336,
+     344
+    ],
+    [
+     344,
+     352
+    ],
+    [
+     352,
+     360
+    ],
+    [
+     360,
+     368
+    ],
+    [
+     368,
+     376
+    ],
+    [
+     376,
+     384
+    ],
+    [
+     384,
+     392
+    ],
+    [
+     392,
+     400
+    ],
+    [
+     400,
+     408
+    ],
+    [
+     408,
+     416
+    ],
+    [
+     416,
+     424
+    ],
+    [
+     424,
+     432
+    ],
+    [
+     432,
+     440
+    ],
+    [
+     440,
+     448
+    ],
+    [
+     448,
+     456
+    ],
+    [
+     456,
+     464
+    ],
+    [
+     464,
+     472
+    ],
+    [
+     472,
+     480
+    ],
+    [
+     480,
+     488
+    ],
+    [
+     488,
+     496
+    ],
+    [
+     496,
+     504
+    ],
+    [
+     504,
+     512
+    ],
+    [
+     512,
+     520
+    ],
+    [
+     520,
+     528
+    ],
+    [
+     528,
+     536
+    ],
+    [
+     536,
+     544
+    ],
+    [
+     544,
+     552
+    ],
+    [
+     552,
+     560
+    ],
+    [
+     560,
+     568
+    ],
+    [
+     568,
+     576
+    ],
+    [
+     576,
+     584
+    ],
+    [
+     584,
+     592
+    ],
+    [
+     592,
+     600
+    ],
+    [
+     600,
+     608
+    ],
+    [
+     608,
+     616
+    ],
+    [
+     616,
+     624
+    ],
+    [
+     624,
+     632
+    ],
+    [
+     632,
+     640
+    ],
+    [
+     640,
+     648
+    ],
+    [
+     648,
+     656
+    ],
+    [
+     656,
+     664
+    ],
+    [
+     664,
+     672
+    ],
+    [
+     672,
+     680
+    ],
+    [
+     680,
+     688
+    ],
+    [
+     688,
+     696
+    ],
+    [
+     696,
+     704
+    ],
+    [
+     704,
+     712
+    ],
+    [
+     712,
+     720
+    ],
+    [
+     720,
+     728
+    ],
+    [
+     728,
+     736
+    ],
+    [
+     736,
+     744
+    ],
+    [
+     744,
+     752
+    ],
+    [
+     752,
+     760
+    ],
+    [
+     760,
+     768
+    ],
+    [
+     768,
+     776
+    ],
+    [
+     776,
+     784
+    ],
+    [
+     784,
+     792
+    ],
+    [
+     792,
+     800
+    ],
+    [
+     800,
+     808
+    ],
+    [
+     808,
+     816
+    ],
+    [
+     816,
+     824
+    ],
+    [
+     824,
+     832
+    ],
+    [
+     832,
+     840
+    ],
+    [
+     840,
+     848
+    ],
+    [
+     848,
+     856
+    ],
+    [
+     856,
+     864
+    ],
+    [
+     864,
+     872
+    ],
+    [
+     872,
+     880
+    ],
+    [
+     880,
+     888
+    ],
+    [
+     888,
+     896
+    ],
+    [
+     896,
+     904
+    ],
+    [
+     904,
+     912
+    ],
+    [
+     912,
+     920
+    ],
+    [
+     920,
+     928
+    ],
+    [
+     928,
+     936
+    ],
+    [
+     936,
+     944
+    ],
+    [
+     944,
+     952
+    ],
+    [
+     952,
+     960
+    ],
+    [
+     960,
+     968
+    ],
+    [
+     968,
+     976
+    ],
+    [
+     976,
+     984
+    ],
+    [
+     984,
+     992
+    ],
+    [
+     992,
+     1000
+    ]
+   ],
+   "decoded": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+   "decodedSkipSpecial": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+   "pretokens": [
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+   ]
+  },
+  {
+   "text": "----------------------------------------------------------------",
+   "ids": [
+    3513
+   ],
+   "offsets": [
+    [
+     0,
+     64
+    ]
+   ],
+   "decoded": "----------------------------------------------------------------",
+   "decodedSkipSpecial": "----------------------------------------------------------------",
+   "pretokens": [
+    "----------------------------------------------------------------"
+   ]
+  },
+  {
+   "text": "",
+   "ids": [],
+   "offsets": [],
+   "decoded": "",
+   "decodedSkipSpecial": "",
+   "pretokens": []
+  },
+  {
+   "text": " ",
+   "ids": [
+    220
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ]
+   ],
+   "decoded": " ",
+   "decodedSkipSpecial": " ",
+   "pretokens": [
+    " "
+   ]
+  },
+  {
+   "text": "\t\t\n  \n",
+   "ids": [
+    2394,
+    2303
+   ],
+   "offsets": [
+    [
+     0,
+     3
+    ],
+    [
+     3,
+     6
+    ]
+   ],
+   "decoded": "\t\t\n  \n",
+   "decodedSkipSpecial": "\t\t\n  \n",
+   "pretokens": [
+    "\t\t\n  \n"
+   ]
+  },
+  {
+   "text": "Инференс — это работа обученной модели в продакшне. Запрос проходит через шаблон чата и токенизатор, затем prefill считает KV cache для всего промпта, а decode генерирует ответ по одному токену. Детокенизатор превращает id обратно в текст, парсеры отделяют рассуждения и вызовы инструментов, а сервер отправляет клиенту SSE-чанки. Время до первого токена (TTFT) зависит от длины промпта, межтокенная задержка (ITL) — от пропускной способности памяти GPU.",
+   "ids": [
+    30174,
+    2108,
+    131049,
+    5259,
+    2247,
+    1959,
+    67879,
+    129897,
+    143180,
+    132498,
+    138082,
+    5805,
+    88615,
+    15869,
+    12150,
+    78762,
+    13,
+    52577,
+    19077,
+    40957,
+    40191,
+    126910,
+    129334,
+    54517,
+    37622,
+    135428,
+    17307,
+    42103,
+    7587,
+    10813,
+    14746,
+    9684,
+    8959,
+    57306,
+    11,
+    138265,
+    855,
+    7559,
+    130480,
+    26909,
+    84648,
+    6500,
+    19849,
+    129291,
+    12281,
+    12228,
+    8005,
+    43513,
+    11,
+    20396,
+    16895,
+    24725,
+    5259,
+    7599,
+    133609,
+    92647,
+    17686,
+    52319,
+    130290,
+    10813,
+    14746,
+    5259,
+    3780,
+    13,
+    38803,
+    8178,
+    14746,
+    9684,
+    8959,
+    57306,
+    12281,
+    32642,
+    51766,
+    26909,
+    877,
+    131705,
+    13685,
+    5805,
+    70895,
+    11,
+    62680,
+    129074,
+    4552,
+    135982,
+    43000,
+    69029,
+    125326,
+    55899,
+    6949,
+    18492,
+    7587,
+    96666,
+    6715,
+    4552,
+    40978,
+    6597,
+    19763,
+    92508,
+    6715,
+    11,
+    20396,
+    92764,
+    86088,
+    127951,
+    131562,
+    3780,
+    73473,
+    12,
+    6020,
+    7336,
+    16748,
+    13,
+    22933,
+    49581,
+    4235,
+    56197,
+    142188,
+    10813,
+    14746,
+    50312,
+    320,
+    14903,
+    3994,
+    8,
+    139182,
+    20264,
+    7796,
+    11073,
+    12368,
+    12281,
+    12228,
+    8005,
+    43513,
+    11,
+    11310,
+    49336,
+    130796,
+    133856,
+    52180,
+    57569,
+    13132,
+    320,
+    952,
+    43,
+    8,
+    1959,
+    20264,
+    12281,
+    28156,
+    43055,
+    4793,
+    38888,
+    129187,
+    67642,
+    5063,
+    23763,
+    128088,
+    22670,
+    13
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     5,
+     7
+    ],
+    [
+     7,
+     8
+    ],
+    [
+     8,
+     10
+    ],
+    [
+     10,
+     14
+    ],
+    [
+     14,
+     21
+    ],
+    [
+     21,
+     26
+    ],
+    [
+     26,
+     31
+    ],
+    [
+     31,
+     38
+    ],
+    [
+     38,
+     40
+    ],
+    [
+     40,
+     45
+    ],
+    [
+     45,
+     47
+    ],
+    [
+     47,
+     48
+    ],
+    [
+     48,
+     50
+    ],
+    [
+     50,
+     51
+    ],
+    [
+     51,
+     53
+    ],
+    [
+     53,
+     55
+    ],
+    [
+     55,
+     58
+    ],
+    [
+     58,
+     62
+    ],
+    [
+     62,
+     67
+    ],
+    [
+     67,
+     73
+    ],
+    [
+     73,
+     75
+    ],
+    [
+     75,
+     77
+    ],
+    [
+     77,
+     80
+    ],
+    [
+     80,
+     82
+    ],
+    [
+     82,
+     85
+    ],
+    [
+     85,
+     87
+    ],
+    [
+     87,
+     89
+    ],
+    [
+     89,
+     91
+    ],
+    [
+     91,
+     94
+    ],
+    [
+     94,
+     95
+    ],
+    [
+     95,
+     99
+    ],
+    [
+     99,
+     100
+    ],
+    [
+     100,
+     106
+    ],
+    [
+     106,
+     110
+    ],
+    [
+     110,
+     114
+    ],
+    [
+     114,
+     119
+    ],
+    [
+     119,
+     122
+    ],
+    [
+     122,
+     125
+    ],
+    [
+     125,
+     131
+    ],
+    [
+     131,
+     135
+    ],
+    [
+     135,
+     141
+    ],
+    [
+     141,
+     144
+    ],
+    [
+     144,
+     146
+    ],
+    [
+     146,
+     147
+    ],
+    [
+     147,
+     149
+    ],
+    [
+     149,
+     150
+    ],
+    [
+     150,
+     152
+    ],
+    [
+     152,
+     159
+    ],
+    [
+     159,
+     161
+    ],
+    [
+     161,
+     163
+    ],
+    [
+     163,
+     165
+    ],
+    [
+     165,
+     170
+    ],
+    [
+     170,
+     176
+    ],
+    [
+     176,
+     179
+    ],
+    [
+     179,
+     182
+    ],
+    [
+     182,
+     186
+    ],
+    [
+     186,
+     188
+    ],
+    [
+     188,
+     190
+    ],
+    [
+     190,
+     192
+    ],
+    [
+     192,
+     193
+    ],
+    [
+     193,
+     194
+    ],
+    [
+     194,
+     196
+    ],
+    [
+     196,
+     198
+    ],
+    [
+     198,
+     200
+    ],
+    [
+     200,
+     203
+    ],
+    [
+     203,
+     204
+    ],
+    [
+     204,
+     208
+    ],
+    [
+     208,
+     211
+    ],
+    [
+     211,
+     213
+    ],
+    [
+     213,
+     216
+    ],
+    [
+     216,
+     219
+    ],
+    [
+     219,
+     222
+    ],
+    [
+     222,
+     228
+    ],
+    [
+     228,
+     230
+    ],
+    [
+     230,
+     232
+    ],
+    [
+     232,
+     238
+    ],
+    [
+     238,
+     239
+    ],
+    [
+     239,
+     243
+    ],
+    [
+     243,
+     246
+    ],
+    [
+     246,
+     247
+    ],
+    [
+     247,
+     251
+    ],
+    [
+     251,
+     254
+    ],
+    [
+     254,
+     256
+    ],
+    [
+     256,
+     261
+    ],
+    [
+     261,
+     263
+    ],
+    [
+     263,
+     264
+    ],
+    [
+     264,
+     268
+    ],
+    [
+     268,
+     270
+    ],
+    [
+     270,
+     274
+    ],
+    [
+     274,
+     276
+    ],
+    [
+     276,
+     277
+    ],
+    [
+     277,
+     280
+    ],
+    [
+     280,
+     282
+    ],
+    [
+     282,
+     284
+    ],
+    [
+     284,
+     288
+    ],
+    [
+     288,
+     290
+    ],
+    [
+     290,
+     291
+    ],
+    [
+     291,
+     293
+    ],
+    [
+     293,
+     300
+    ],
+    [
+     300,
+     307
+    ],
+    [
+     307,
+     311
+    ],
+    [
+     311,
+     318
+    ],
+    [
+     318,
+     319
+    ],
+    [
+     319,
+     323
+    ],
+    [
+     323,
+     324
+    ],
+    [
+     324,
+     325
+    ],
+    [
+     325,
+     327
+    ],
+    [
+     327,
+     329
+    ],
+    [
+     329,
+     330
+    ],
+    [
+     330,
+     332
+    ],
+    [
+     332,
+     335
+    ],
+    [
+     335,
+     336
+    ],
+    [
+     336,
+     339
+    ],
+    [
+     339,
+     347
+    ],
+    [
+     347,
+     349
+    ],
+    [
+     349,
+     351
+    ],
+    [
+     351,
+     354
+    ],
+    [
+     354,
+     356
+    ],
+    [
+     356,
+     358
+    ],
+    [
+     358,
+     360
+    ],
+    [
+     360,
+     361
+    ],
+    [
+     361,
+     369
+    ],
+    [
+     369,
+     372
+    ],
+    [
+     372,
+     374
+    ],
+    [
+     374,
+     376
+    ],
+    [
+     376,
+     378
+    ],
+    [
+     378,
+     381
+    ],
+    [
+     381,
+     383
+    ],
+    [
+     383,
+     384
+    ],
+    [
+     384,
+     386
+    ],
+    [
+     386,
+     387
+    ],
+    [
+     387,
+     389
+    ],
+    [
+     389,
+     391
+    ],
+    [
+     391,
+     394
+    ],
+    [
+     394,
+     399
+    ],
+    [
+     399,
+     403
+    ],
+    [
+     403,
+     406
+    ],
+    [
+     406,
+     408
+    ],
+    [
+     408,
+     410
+    ],
+    [
+     410,
+     412
+    ],
+    [
+     412,
+     413
+    ],
+    [
+     413,
+     414
+    ],
+    [
+     414,
+     416
+    ],
+    [
+     416,
+     419
+    ],
+    [
+     419,
+     422
+    ],
+    [
+     422,
+     424
+    ],
+    [
+     424,
+     426
+    ],
+    [
+     426,
+     427
+    ],
+    [
+     427,
+     430
+    ],
+    [
+     430,
+     437
+    ],
+    [
+     437,
+     442
+    ],
+    [
+     442,
+     444
+    ],
+    [
+     444,
+     446
+    ],
+    [
+     446,
+     449
+    ],
+    [
+     449,
+     453
+    ],
+    [
+     453,
+     454
+    ]
+   ],
+   "decoded": "Инференс — это работа обученной модели в продакшне. Запрос проходит через шаблон чата и токенизатор, затем prefill считает KV cache для всего промпта, а decode генерирует ответ по одному токену. Детокенизатор превращает id обратно в текст, парсеры отделяют рассуждения и вызовы инструментов, а сервер отправляет клиенту SSE-чанки. Время до первого токена (TTFT) зависит от длины промпта, межтокенная задержка (ITL) — от пропускной способности памяти GPU.",
+   "decodedSkipSpecial": "Инференс — это работа обученной модели в продакшне. Запрос проходит через шаблон чата и токенизатор, затем prefill считает KV cache для всего промпта, а decode генерирует ответ по одному токену. Детокенизатор превращает id обратно в текст, парсеры отделяют рассуждения и вызовы инструментов, а сервер отправляет клиенту SSE-чанки. Время до первого токена (TTFT) зависит от длины промпта, межтокенная задержка (ITL) — от пропускной способности памяти GPU.",
+   "pretokens": [
+    "Инференс",
+    " —",
+    " это",
+    " работа",
+    " обученной",
+    " модели",
+    " в",
+    " продакшне",
+    ".",
+    " Запрос",
+    " проходит",
+    " через",
+    " шаблон",
+    " чата",
+    " и",
+    " токенизатор",
+    ",",
+    " затем",
+    " prefill",
+    " считает",
+    " KV",
+    " cache",
+    " для",
+    " всего",
+    " промпта",
+    ",",
+    " а",
+    " decode",
+    " генерирует",
+    " ответ",
+    " по",
+    " одному",
+    " токену",
+    ".",
+    " Детокенизатор",
+    " превращает",
+    " id",
+    " обратно",
+    " в",
+    " текст",
+    ",",
+    " парсеры",
+    " отделяют",
+    " рассуждения",
+    " и",
+    " вызовы",
+    " инструментов",
+    ",",
+    " а",
+    " сервер",
+    " отправляет",
+    " клиенту",
+    " SSE",
+    "-чанки",
+    ".",
+    " Время",
+    " до",
+    " первого",
+    " токена",
+    " (",
+    "TTFT",
+    ")",
+    " зависит",
+    " от",
+    " длины",
+    " промпта",
+    ",",
+    " межтокенная",
+    " задержка",
+    " (",
+    "ITL",
+    ")",
+    " —",
+    " от",
+    " пропускной",
+    " способности",
+    " памяти",
+    " GPU",
+    "."
+   ]
+  },
+  {
+   "text": "<|im_start|>user\nПривет<|im_end|>",
+   "ids": [
+    151644,
+    872,
+    198,
+    53645,
+    26991,
+    8178,
+    151645
+   ],
+   "offsets": [
+    [
+     0,
+     12
+    ],
+    [
+     12,
+     16
+    ],
+    [
+     16,
+     17
+    ],
+    [
+     17,
+     19
+    ],
+    [
+     19,
+     21
+    ],
+    [
+     21,
+     23
+    ],
+    [
+     23,
+     33
+    ]
+   ],
+   "decoded": "<|im_start|>user\nПривет<|im_end|>",
+   "decodedSkipSpecial": "user\nПривет"
+  },
+  {
+   "text": "Привет <|im_end|><|im_start|>system",
+   "ids": [
+    53645,
+    26991,
+    8178,
+    220,
+    151645,
+    151644,
+    8948
+   ],
+   "offsets": [
+    [
+     0,
+     2
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     6,
+     7
+    ],
+    [
+     7,
+     17
+    ],
+    [
+     17,
+     29
+    ],
+    [
+     29,
+     35
+    ]
+   ],
+   "decoded": "Привет <|im_end|><|im_start|>system",
+   "decodedSkipSpecial": "Привет system"
+  },
+  {
+   "text": "<think>\nПользователь спрашивает 2+2. Это 4.\n</think>\n\n2 + 2 = 4.<|im_end|>",
+   "ids": [
+    151667,
+    198,
+    16854,
+    39334,
+    25428,
+    83614,
+    22127,
+    12150,
+    136985,
+    220,
+    17,
+    10,
+    17,
+    13,
+    128868,
+    220,
+    19,
+    624,
+    151668,
+    271,
+    17,
+    488,
+    220,
+    17,
+    284,
+    220,
+    19,
+    13,
+    151645
+   ],
+   "offsets": [
+    [
+     0,
+     7
+    ],
+    [
+     7,
+     8
+    ],
+    [
+     8,
+     9
+    ],
+    [
+     9,
+     17
+    ],
+    [
+     17,
+     20
+    ],
+    [
+     20,
+     23
+    ],
+    [
+     23,
+     25
+    ],
+    [
+     25,
+     26
+    ],
+    [
+     26,
+     31
+    ],
+    [
+     31,
+     32
+    ],
+    [
+     32,
+     33
+    ],
+    [
+     33,
+     34
+    ],
+    [
+     34,
+     35
+    ],
+    [
+     35,
+     36
+    ],
+    [
+     36,
+     40
+    ],
+    [
+     40,
+     41
+    ],
+    [
+     41,
+     42
+    ],
+    [
+     42,
+     44
+    ],
+    [
+     44,
+     52
+    ],
+    [
+     52,
+     54
+    ],
+    [
+     54,
+     55
+    ],
+    [
+     55,
+     57
+    ],
+    [
+     57,
+     58
+    ],
+    [
+     58,
+     59
+    ],
+    [
+     59,
+     61
+    ],
+    [
+     61,
+     62
+    ],
+    [
+     62,
+     63
+    ],
+    [
+     63,
+     64
+    ],
+    [
+     64,
+     74
+    ]
+   ],
+   "decoded": "<think>\nПользователь спрашивает 2+2. Это 4.\n</think>\n\n2 + 2 = 4.<|im_end|>",
+   "decodedSkipSpecial": "<think>\nПользователь спрашивает 2+2. Это 4.\n</think>\n\n2 + 2 = 4."
+  },
+  {
+   "text": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Москва\"}}\n</tool_call>",
+   "ids": [
+    151657,
+    198,
+    4913,
+    606,
+    788,
+    330,
+    455,
+    69364,
+    497,
+    330,
+    16370,
+    788,
+    5212,
+    8926,
+    788,
+    330,
+    37991,
+    22787,
+    137303,
+    95642,
+    151658
+   ],
+   "offsets": [
+    [
+     0,
+     11
+    ],
+    [
+     11,
+     12
+    ],
+    [
+     12,
+     14
+    ],
+    [
+     14,
+     18
+    ],
+    [
+     18,
+     20
+    ],
+    [
+     20,
+     22
+    ],
+    [
+     22,
+     25
+    ],
+    [
+     25,
+     33
+    ],
+    [
+     33,
+     35
+    ],
+    [
+     35,
+     37
+    ],
+    [
+     37,
+     46
+    ],
+    [
+     46,
+     48
+    ],
+    [
+     48,
+     51
+    ],
+    [
+     51,
+     55
+    ],
+    [
+     55,
+     57
+    ],
+    [
+     57,
+     59
+    ],
+    [
+     59,
+     60
+    ],
+    [
+     60,
+     62
+    ],
+    [
+     62,
+     65
+    ],
+    [
+     65,
+     69
+    ],
+    [
+     69,
+     81
+    ]
+   ],
+   "decoded": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Москва\"}}\n</tool_call>",
+   "decodedSkipSpecial": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Москва\"}}\n</tool_call>"
+  },
+  {
+   "text": "<|endoftext|><|fim_prefix|>code<|fim_suffix|>",
+   "ids": [
+    151643,
+    151659,
+    1851,
+    151661
+   ],
+   "offsets": [
+    [
+     0,
+     13
+    ],
+    [
+     13,
+     27
+    ],
+    [
+     27,
+     31
+    ],
+    [
+     31,
+     45
+    ]
+   ],
+   "decoded": "<|endoftext|><|fim_prefix|>code<|fim_suffix|>",
+   "decodedSkipSpecial": "<|fim_prefix|>code<|fim_suffix|>"
+  },
+  {
+   "text": "<|im_start| не спецтокен",
+   "ids": [
+    27,
+    91,
+    318,
+    4906,
+    91,
+    18658,
+    131548,
+    130796,
+    5259
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     10
+    ],
+    [
+     10,
+     11
+    ],
+    [
+     11,
+     14
+    ],
+    [
+     14,
+     19
+    ],
+    [
+     19,
+     22
+    ],
+    [
+     22,
+     24
+    ]
+   ],
+   "decoded": "<|im_start| не спецтокен",
+   "decodedSkipSpecial": "<|im_start| не спецтокен",
+   "pretokens": [
+    "<|",
+    "im",
+    "_start",
+    "|",
+    " не",
+    " спецтокен"
+   ]
+  },
+  {
+   "text": "<|im_start|>system\nТы полезный ассистент.<|im_end|>\n<|im_start|>user\nСколько будет 2+2?<|im_end|>\n<|im_start|>assistant\n",
+   "ids": [
+    151644,
+    8948,
+    198,
+    33995,
+    4552,
+    28519,
+    31885,
+    33513,
+    20396,
+    128698,
+    34011,
+    18673,
+    13,
+    151645,
+    198,
+    151644,
+    872,
+    198,
+    19311,
+    4793,
+    53470,
+    68823,
+    220,
+    17,
+    10,
+    17,
+    30,
+    151645,
+    198,
+    151644,
+    77091,
+    198
+   ],
+   "offsets": [
+    [
+     0,
+     12
+    ],
+    [
+     12,
+     18
+    ],
+    [
+     18,
+     19
+    ],
+    [
+     19,
+     20
+    ],
+    [
+     20,
+     21
+    ],
+    [
+     21,
+     25
+    ],
+    [
+     25,
+     27
+    ],
+    [
+     27,
+     30
+    ],
+    [
+     30,
+     32
+    ],
+    [
+     32,
+     34
+    ],
+    [
+     34,
+     37
+    ],
+    [
+     37,
+     40
+    ],
+    [
+     40,
+     41
+    ],
+    [
+     41,
+     51
+    ],
+    [
+     51,
+     52
+    ],
+    [
+     52,
+     64
+    ],
+    [
+     64,
+     68
+    ],
+    [
+     68,
+     69
+    ],
+    [
+     69,
+     70
+    ],
+    [
+     70,
+     71
+    ],
+    [
+     71,
+     76
+    ],
+    [
+     76,
+     82
+    ],
+    [
+     82,
+     83
+    ],
+    [
+     83,
+     84
+    ],
+    [
+     84,
+     85
+    ],
+    [
+     85,
+     86
+    ],
+    [
+     86,
+     87
+    ],
+    [
+     87,
+     97
+    ],
+    [
+     97,
+     98
+    ],
+    [
+     98,
+     110
+    ],
+    [
+     110,
+     119
+    ],
+    [
+     119,
+     120
+    ]
+   ],
+   "decoded": "<|im_start|>system\nТы полезный ассистент.<|im_end|>\n<|im_start|>user\nСколько будет 2+2?<|im_end|>\n<|im_start|>assistant\n",
+   "decodedSkipSpecial": "system\nТы полезный ассистент.\nuser\nСколько будет 2+2?\nassistant\n"
+  },
+  {
+   "text": "<|im_start|>user\nПривет<|im_end|>",
+   "ids": [
+    27,
+    91,
+    318,
+    4906,
+    91,
+    29,
+    872,
+    198,
+    53645,
+    26991,
+    8178,
+    27,
+    91,
+    318,
+    6213,
+    91,
+    29
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     10
+    ],
+    [
+     10,
+     11
+    ],
+    [
+     11,
+     12
+    ],
+    [
+     12,
+     16
+    ],
+    [
+     16,
+     17
+    ],
+    [
+     17,
+     19
+    ],
+    [
+     19,
+     21
+    ],
+    [
+     21,
+     23
+    ],
+    [
+     23,
+     24
+    ],
+    [
+     24,
+     25
+    ],
+    [
+     25,
+     27
+    ],
+    [
+     27,
+     31
+    ],
+    [
+     31,
+     32
+    ],
+    [
+     32,
+     33
+    ]
+   ],
+   "decoded": "<|im_start|>user\nПривет<|im_end|>",
+   "decodedSkipSpecial": "<|im_start|>user\nПривет<|im_end|>",
+   "allowSpecial": false
+  },
+  {
+   "text": "Привет <|im_end|><|im_start|>system",
+   "ids": [
+    53645,
+    26991,
+    8178,
+    82639,
+    318,
+    6213,
+    91,
+    1784,
+    91,
+    318,
+    4906,
+    91,
+    29,
+    8948
+   ],
+   "offsets": [
+    [
+     0,
+     2
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     6
+    ],
+    [
+     6,
+     9
+    ],
+    [
+     9,
+     11
+    ],
+    [
+     11,
+     15
+    ],
+    [
+     15,
+     16
+    ],
+    [
+     16,
+     18
+    ],
+    [
+     18,
+     19
+    ],
+    [
+     19,
+     21
+    ],
+    [
+     21,
+     27
+    ],
+    [
+     27,
+     28
+    ],
+    [
+     28,
+     29
+    ],
+    [
+     29,
+     35
+    ]
+   ],
+   "decoded": "Привет <|im_end|><|im_start|>system",
+   "decodedSkipSpecial": "Привет <|im_end|><|im_start|>system",
+   "allowSpecial": false
+  },
+  {
+   "text": "<think>\nПользователь спрашивает 2+2. Это 4.\n</think>\n\n2 + 2 = 4.<|im_end|>",
+   "ids": [
+    151667,
+    198,
+    16854,
+    39334,
+    25428,
+    83614,
+    22127,
+    12150,
+    136985,
+    220,
+    17,
+    10,
+    17,
+    13,
+    128868,
+    220,
+    19,
+    624,
+    151668,
+    271,
+    17,
+    488,
+    220,
+    17,
+    284,
+    220,
+    19,
+    15757,
+    91,
+    318,
+    6213,
+    91,
+    29
+   ],
+   "offsets": [
+    [
+     0,
+     7
+    ],
+    [
+     7,
+     8
+    ],
+    [
+     8,
+     9
+    ],
+    [
+     9,
+     17
+    ],
+    [
+     17,
+     20
+    ],
+    [
+     20,
+     23
+    ],
+    [
+     23,
+     25
+    ],
+    [
+     25,
+     26
+    ],
+    [
+     26,
+     31
+    ],
+    [
+     31,
+     32
+    ],
+    [
+     32,
+     33
+    ],
+    [
+     33,
+     34
+    ],
+    [
+     34,
+     35
+    ],
+    [
+     35,
+     36
+    ],
+    [
+     36,
+     40
+    ],
+    [
+     40,
+     41
+    ],
+    [
+     41,
+     42
+    ],
+    [
+     42,
+     44
+    ],
+    [
+     44,
+     52
+    ],
+    [
+     52,
+     54
+    ],
+    [
+     54,
+     55
+    ],
+    [
+     55,
+     57
+    ],
+    [
+     57,
+     58
+    ],
+    [
+     58,
+     59
+    ],
+    [
+     59,
+     61
+    ],
+    [
+     61,
+     62
+    ],
+    [
+     62,
+     63
+    ],
+    [
+     63,
+     65
+    ],
+    [
+     65,
+     66
+    ],
+    [
+     66,
+     68
+    ],
+    [
+     68,
+     72
+    ],
+    [
+     72,
+     73
+    ],
+    [
+     73,
+     74
+    ]
+   ],
+   "decoded": "<think>\nПользователь спрашивает 2+2. Это 4.\n</think>\n\n2 + 2 = 4.<|im_end|>",
+   "decodedSkipSpecial": "<think>\nПользователь спрашивает 2+2. Это 4.\n</think>\n\n2 + 2 = 4.<|im_end|>",
+   "allowSpecial": false
+  },
+  {
+   "text": "<|endoftext|><|fim_prefix|>code<|fim_suffix|>",
+   "ids": [
+    27,
+    91,
+    8691,
+    723,
+    427,
+    91,
+    29,
+    151659,
+    1851,
+    151661
+   ],
+   "offsets": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     6
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     8,
+     11
+    ],
+    [
+     11,
+     12
+    ],
+    [
+     12,
+     13
+    ],
+    [
+     13,
+     27
+    ],
+    [
+     27,
+     31
+    ],
+    [
+     31,
+     45
+    ]
+   ],
+   "decoded": "<|endoftext|><|fim_prefix|>code<|fim_suffix|>",
+   "decodedSkipSpecial": "<|endoftext|><|fim_prefix|>code<|fim_suffix|>",
+   "allowSpecial": false
+  }
+ ]
+}

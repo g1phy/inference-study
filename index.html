@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="Интерактивный разбор инференса LLM: путь запроса от Enter до последнего токена на ваших данных." />
+    <!-- цвет панели браузера до запуска JS; дальше его ведёт src/state/theme.ts по выбранной теме -->
+    <meta name="theme-color" content="#f5f5f2" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e0e0d" media="(prefers-color-scheme: dark)" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b7a4b'/%3E%3Crect x='6' y='9' width='9' height='6' rx='2' fill='%23fcfcfb'/%3E%3Crect x='17' y='9' width='9' height='6' rx='2' fill='%23fcfcfb' fill-opacity='.55'/%3E%3Crect x='6' y='17' width='13' height='6' rx='2' fill='%23fcfcfb' fill-opacity='.55'/%3E%3Crect x='21' y='17' width='5' height='6' rx='2' fill='%23fcfcfb'/%3E%3C/svg%3E"
+    />
+    <!-- словарь токенизатора нужен симулятору первым: качаем сразу, не дожидаясь чанков (тот же URL и режим, что у fetch в loader.ts) -->
+    <link rel="preload" href="%BASE_URL%tokenizer/qwen3.json" as="fetch" type="application/json" crossorigin="anonymous" />
+    <title>Инференс LLM наглядно</title>
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('inference-study:theme');
+          if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,929 @@
+{
+ "source": "jinja2 3.1.6, окружение как в transformers; Qwen3: research/vendor/qwen3/tokenizer_config.json; Llama 3.1 (unsloth), DeepSeek-R1, gpt-oss-20b: шаблоны с HF; strftime_now = 2026-11-12",
+ "cases": [
+  {
+   "name": "qwen3: system + user",
+   "input": {
+    "family": "qwen3",
+    "messages": [
+     {
+      "role": "system",
+      "content": "Ты полезный ассистент."
+     },
+     {
+      "role": "user",
+      "content": "Сколько будет 2+2?"
+     }
+    ]
+   },
+   "text": "<|im_start|>system\nТы полезный ассистент.<|im_end|>\n<|im_start|>user\nСколько будет 2+2?<|im_end|>\n<|im_start|>assistant\n"
+  },
+  {
+   "name": "qwen3: user, enable_thinking=false",
+   "input": {
+    "family": "qwen3",
+    "messages": [
+     {
+      "role": "user",
+      "content": "Сколько будет 2+2?"
+     }
+    ],
+    "enableThinking": false
+   },
+   "text": "<|im_start|>user\nСколько будет 2+2?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+  },
+  {
+   "name": "qwen3: enable_thinking=true явно",
+   "input": {
+    "family": "qwen3",
+    "messages": [
+     {
+      "role": "system",
+      "content": "Ты полезный ассистент."
+     },
+     {
+      "role": "user",
+      "content": "Сколько будет 2+2?"
+     }
+    ],
+    "enableThinking": true
+   },
+   "text": "<|im_start|>system\nТы полезный ассистент.<|im_end|>\n<|im_start|>user\nСколько будет 2+2?<|im_end|>\n<|im_start|>assistant\n"
+  },
+  {
+   "name": "qwen3: без generation prompt",
+   "input": {
+    "family": "qwen3",
+    "messages": [
+     {
+      "role": "system",
+      "content": "Ты полезный ассистент."
+     },
+     {
+      "role": "user",
+      "content": "Сколько будет 2+2?"
+     }
+    ],
+    "addGenerationPrompt": false
+   },
+   "text": "<|im_start|>system\nТы полезный ассистент.<|im_end|>\n<|im_start|>user\nСколько будет 2+2?<|im_end|>\n"
+  },
+  {
+   "name": "qwen3: tools + system",
+   "input": {
+    "family": "qwen3",
+    "messages": [
+     {
+      "role": "system",
+      "content": "Ты полезный ассистент."
+     },
+     {
+      "role": "user",
+      "content": "Какая погода в Москве?"
+     }
+    ],
+    "tools": [
+     {
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "description": "Получить текущую погоду в городе",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "city": {
+          "type": "string",
+          "description": "Название города"
+         }
+        },
+        "required": [
+         "city"
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "text": "<|im_start|>system\nТы полезный ассистент.\n\n# Tools\n\nYou may call one or more functions to assist with the user query.\n\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{\"type\": \"function\", \"function\": {\"name\": \"get_weather\", \"description\": \"Получить текущую погоду в городе\", \"parameters\": {\"type\": \"object\", \"properties\": {\"city\": {\"type\": \"string\", \"description\": \"Название города\"}}, \"required\": [\"city\"]}}}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{\"name\": <function-name>, \"arguments\": <args-json-object>}\n</tool_call><|im_end|>\n<|im_start|>user\nКакая погода в Москве?<|im_end|>\n<|im_start|>assistant\n"
+  },
+  {
+   "name": "qwen3: tools без system",
+   "input": {
+    "family": "qwen3",
+    "messages": [
+     {
+      "role": "user",
+      "content": "Найди билеты"
+     }
+    ],
+    "tools": [
+     {
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "description": "Получить текущую погоду в городе",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "city": {
+          "type": "string",
+          "description": "Название города"
+         }
+        },
+        "required": [
+         "city"
+        ]
+       }
+      }
+     },
+     {
+      "type": "function",
+      "function": {
+       "name": "search_flights",
+       "description": "Найти авиабилеты",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "from": {
+          "type": "string",
+          "description": "Откуда"
+         },
+         "to": {
+          "type": "string"
+         },
+         "passengers": {
+          "type": "integer",
+          "description": "Сколько человек"
+         },
+         "class": {
+          "type": "string",
+          "enum": [
+           "economy",
+           "business"
+          ]
+         },
+         "dates": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         },
+         "filters": {
+          "type": "object",
+          "properties": {
+           "direct": {
+            "type": "boolean"
+           },
+           "maxPrice": {
+            "type": "number"
+           }
+          },
+          "required": [
+           "direct"
+          ]
+         }
+        },
+        "required": [
+         "from",
+         "to"
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "text": "<|im_start|>system\n# Tools\n\nYou may call one or more functions to assist with the user query.\n\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{\"type\": \"function\", \"function\": {\"name\": \"get_weather\", \"description\": \"Получить текущую погоду в городе\", \"parameters\": {\"type\": \"object\", \"properties\": {\"city\": {\"type\": \"string\", \"description\": \"Название города\"}}, \"required\": [\"city\"]}}}\n{\"type\": \"function\", \"function\": {\"name\": \"search_flights\", \"description\": \"Найти авиабилеты\", \"parameters\": {\"type\": \"object\", \"properties\": {\"from\": {\"type\": \"string\", \"description\": \"Откуда\"}, \"to\": {\"type\": \"string\"}, \"passengers\": {\"type\": \"integer\", \"description\": \"Сколько человек\"}, \"class\": {\"type\": \"string\", \"enum\": [\"economy\", \"business\"]}, \"dates\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}}, \"filters\": {\"type\": \"object\", \"properties\": {\"direct\": {\"type\": \"boolean\"}, \"maxPrice\": {\"type\": \"number\"}}, \"required\": [\"direct\"]}}, \"required\": [\"from\", \"to\"]}}}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{\"name\": <function-name>, \"arguments\": <args-json-object>}\n</tool_call><|im_end|>\n<|im_start|>user\nНайди билеты<|im_end|>\n<|im_start|>assistant\n"
+  },
+  {
+   "name": "qwen3: мысли вырезаются из истории",
+   "input": {
+    "family": "qwen3",
+    "messages": [
+     {
+      "role": "user",
+      "content": "Сколько будет 2+2?"
+     },
+     {
+      "role": "assistant",
+      "content": "<think>\nПросто сложение.\n</think>\n\n4"
+     },
+     {
+      "role": "user",
+      "content": "А 3+3?"
+     }
+    ]
+   },
+   "text": "<|im_start|>user\nСколько будет 2+2?<|im_end|>\n<|im_start|>assistant\n4<|im_end|>\n<|im_start|>user\nА 3+3?<|im_end|>\n<|im_start|>assistant\n"
+  },
+  {
+   "name": "qwen3: вызов инструмента и ответ",
+   "input": {
+    "family": "qwen3",
+    "messages": [
+     {
+      "role": "system",
+      "content": "Ты полезный ассистент."
+     },
+     {
+      "role": "user",
+      "content": "Какая погода в Москве?"
+     },
+     {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+       {
+        "id": "call_1",
+        "name": "get_weather",
+        "arguments": {
+         "city": "Москва"
+        }
+       }
+      ]
+     },
+     {
+      "role": "tool",
+      "tool_call_id": "call_1",
+      "content": "{\"temp_c\": -3, \"sky\": \"снег\"}"
+     }
+    ],
+    "tools": [
+     {
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "description": "Получить текущую погоду в городе",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "city": {
+          "type": "string",
+          "description": "Название города"
+         }
+        },
+        "required": [
+         "city"
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "text": "<|im_start|>system\nТы полезный ассистент.\n\n# Tools\n\nYou may call one or more functions to assist with the user query.\n\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{\"type\": \"function\", \"function\": {\"name\": \"get_weather\", \"description\": \"Получить текущую погоду в городе\", \"parameters\": {\"type\": \"object\", \"properties\": {\"city\": {\"type\": \"string\", \"description\": \"Название города\"}}, \"required\": [\"city\"]}}}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{\"name\": <function-name>, \"arguments\": <args-json-object>}\n</tool_call><|im_end|>\n<|im_start|>user\nКакая погода в Москве?<|im_end|>\n<|im_start|>assistant\n<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Москва\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\n{\"temp_c\": -3, \"sky\": \"снег\"}\n</tool_response><|im_end|>\n<|im_start|>assistant\n"
+  },
+  {
+   "name": "qwen3: агентный цикл с reasoning после последнего запроса",
+   "input": {
+    "family": "qwen3",
+    "messages": [
+     {
+      "role": "system",
+      "content": "Ты полезный ассистент."
+     },
+     {
+      "role": "user",
+      "content": "Какая погода в Москве и Казани?"
+     },
+     {
+      "role": "assistant",
+      "content": "",
+      "reasoning": "Нужно два вызова.",
+      "tool_calls": [
+       {
+        "id": "a",
+        "name": "get_weather",
+        "arguments": {
+         "city": "Москва"
+        }
+       },
+       {
+        "id": "b",
+        "name": "get_weather",
+        "arguments": {
+         "city": "Казань"
+        }
+       }
+      ]
+     },
+     {
+      "role": "tool",
+      "tool_call_id": "a",
+      "content": "{\"temp_c\": -3}"
+     },
+     {
+      "role": "tool",
+      "tool_call_id": "b",
+      "content": "{\"temp_c\": 1}"
+     },
+     {
+      "role": "assistant",
+      "content": "<think>\nДанные есть.\n</think>\n\nВ Москве −3 °C, в Казани +1 °C."
+     }
+    ],
+    "tools": [
+     {
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "description": "Получить текущую погоду в городе",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "city": {
+          "type": "string",
+          "description": "Название города"
+         }
+        },
+        "required": [
+         "city"
+        ]
+       }
+      }
+     }
+    ],
+    "addGenerationPrompt": false
+   },
+   "text": "<|im_start|>system\nТы полезный ассистент.\n\n# Tools\n\nYou may call one or more functions to assist with the user query.\n\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{\"type\": \"function\", \"function\": {\"name\": \"get_weather\", \"description\": \"Получить текущую погоду в городе\", \"parameters\": {\"type\": \"object\", \"properties\": {\"city\": {\"type\": \"string\", \"description\": \"Название города\"}}, \"required\": [\"city\"]}}}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{\"name\": <function-name>, \"arguments\": <args-json-object>}\n</tool_call><|im_end|>\n<|im_start|>user\nКакая погода в Москве и Казани?<|im_end|>\n<|im_start|>assistant\n<think>\nНужно два вызова.\n</think>\n\n<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Москва\"}}\n</tool_call>\n<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Казань\"}}\n</tool_call><|im_end|>\n<|im_start|>user\n<tool_response>\n{\"temp_c\": -3}\n</tool_response>\n<tool_response>\n{\"temp_c\": 1}\n</tool_response><|im_end|>\n<|im_start|>assistant\n<think>\nДанные есть.\n</think>\n\nВ Москве −3 °C, в Казани +1 °C.<|im_end|>\n"
+  },
+  {
+   "name": "qwen3: system не первым и пустой reasoning",
+   "input": {
+    "family": "qwen3",
+    "messages": [
+     {
+      "role": "user",
+      "content": "Привет"
+     },
+     {
+      "role": "assistant",
+      "content": "Здравствуйте!",
+      "reasoning": ""
+     },
+     {
+      "role": "system",
+      "content": "Отвечай коротко."
+     },
+     {
+      "role": "user",
+      "content": "Как дела?"
+     }
+    ]
+   },
+   "text": "<|im_start|>user\nПривет<|im_end|>\n<|im_start|>assistant\nЗдравствуйте!<|im_end|>\n<|im_start|>system\nОтвечай коротко.<|im_end|>\n<|im_start|>user\nКак дела?<|im_end|>\n<|im_start|>assistant\n"
+  },
+  {
+   "name": "qwen3: последний ответ ассистента с текстом до tool_call",
+   "input": {
+    "family": "qwen3",
+    "messages": [
+     {
+      "role": "user",
+      "content": "Погода?"
+     },
+     {
+      "role": "assistant",
+      "content": "Сейчас проверю.",
+      "tool_calls": [
+       {
+        "name": "get_weather",
+        "arguments": {
+         "city": "Москва"
+        }
+       }
+      ]
+     }
+    ],
+    "tools": [
+     {
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "description": "Получить текущую погоду в городе",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "city": {
+          "type": "string",
+          "description": "Название города"
+         }
+        },
+        "required": [
+         "city"
+        ]
+       }
+      }
+     }
+    ],
+    "addGenerationPrompt": false
+   },
+   "text": "<|im_start|>system\n# Tools\n\nYou may call one or more functions to assist with the user query.\n\nYou are provided with function signatures within <tools></tools> XML tags:\n<tools>\n{\"type\": \"function\", \"function\": {\"name\": \"get_weather\", \"description\": \"Получить текущую погоду в городе\", \"parameters\": {\"type\": \"object\", \"properties\": {\"city\": {\"type\": \"string\", \"description\": \"Название города\"}}, \"required\": [\"city\"]}}}\n</tools>\n\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\n<tool_call>\n{\"name\": <function-name>, \"arguments\": <args-json-object>}\n</tool_call><|im_end|>\n<|im_start|>user\nПогода?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\nСейчас проверю.\n<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"Москва\"}}\n</tool_call><|im_end|>\n"
+  },
+  {
+   "name": "llama3: system + user",
+   "input": {
+    "family": "llama3",
+    "messages": [
+     {
+      "role": "system",
+      "content": "Ты полезный ассистент."
+     },
+     {
+      "role": "user",
+      "content": "Сколько будет 2+2?"
+     }
+    ]
+   },
+   "text": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 26 Jul 2024\n\nТы полезный ассистент.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nСколько будет 2+2?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
+  },
+  {
+   "name": "llama3: tools, вызов и ответ",
+   "input": {
+    "family": "llama3",
+    "messages": [
+     {
+      "role": "system",
+      "content": "Ты полезный ассистент."
+     },
+     {
+      "role": "user",
+      "content": "Какая погода в Москве?"
+     },
+     {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+       {
+        "id": "call_1",
+        "name": "get_weather",
+        "arguments": {
+         "city": "Москва"
+        }
+       }
+      ]
+     },
+     {
+      "role": "tool",
+      "tool_call_id": "call_1",
+      "content": "{\"temp_c\": -3, \"sky\": \"снег\"}"
+     }
+    ],
+    "tools": [
+     {
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "description": "Получить текущую погоду в городе",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "city": {
+          "type": "string",
+          "description": "Название города"
+         }
+        },
+        "required": [
+         "city"
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "text": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nEnvironment: ipython\nCutting Knowledge Date: December 2023\nToday Date: 26 Jul 2024\n\nТы полезный ассистент.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nGiven the following functions, please respond with a JSON for a function call with its proper arguments that best answers the given prompt.\n\nRespond in the format {\"name\": function name, \"parameters\": dictionary of argument name and its value}.Do not use variables.\n\n{\n    \"type\": \"function\",\n    \"function\": {\n        \"name\": \"get_weather\",\n        \"description\": \"Получить текущую погоду в городе\",\n        \"parameters\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"city\": {\n                    \"type\": \"string\",\n                    \"description\": \"Название города\"\n                }\n            },\n            \"required\": [\n                \"city\"\n            ]\n        }\n    }\n}\n\nКакая погода в Москве?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n{\"name\": \"get_weather\", \"parameters\": {\"city\": \"Москва\"}}<|eot_id|><|start_header_id|>ipython<|end_header_id|>\n\n\"{\\\"temp_c\\\": -3, \\\"sky\\\": \\\"снег\\\"}\"<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
+  },
+  {
+   "name": "llama3: многоходовый без system",
+   "input": {
+    "family": "llama3",
+    "messages": [
+     {
+      "role": "user",
+      "content": "Сколько будет 2+2?"
+     },
+     {
+      "role": "assistant",
+      "content": "4"
+     },
+     {
+      "role": "user",
+      "content": "  А 3+3?  "
+     }
+    ]
+   },
+   "text": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 26 Jul 2024\n\n<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nСколько будет 2+2?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n4<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nА 3+3?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
+  },
+  {
+   "name": "llama3: tools без system",
+   "input": {
+    "family": "llama3",
+    "messages": [
+     {
+      "role": "user",
+      "content": "Найди билеты"
+     }
+    ],
+    "tools": [
+     {
+      "type": "function",
+      "function": {
+       "name": "search_flights",
+       "description": "Найти авиабилеты",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "from": {
+          "type": "string",
+          "description": "Откуда"
+         },
+         "to": {
+          "type": "string"
+         },
+         "passengers": {
+          "type": "integer",
+          "description": "Сколько человек"
+         },
+         "class": {
+          "type": "string",
+          "enum": [
+           "economy",
+           "business"
+          ]
+         },
+         "dates": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         },
+         "filters": {
+          "type": "object",
+          "properties": {
+           "direct": {
+            "type": "boolean"
+           },
+           "maxPrice": {
+            "type": "number"
+           }
+          },
+          "required": [
+           "direct"
+          ]
+         }
+        },
+        "required": [
+         "from",
+         "to"
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "text": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nEnvironment: ipython\nCutting Knowledge Date: December 2023\nToday Date: 26 Jul 2024\n\n<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nGiven the following functions, please respond with a JSON for a function call with its proper arguments that best answers the given prompt.\n\nRespond in the format {\"name\": function name, \"parameters\": dictionary of argument name and its value}.Do not use variables.\n\n{\n    \"type\": \"function\",\n    \"function\": {\n        \"name\": \"search_flights\",\n        \"description\": \"Найти авиабилеты\",\n        \"parameters\": {\n            \"type\": \"object\",\n            \"properties\": {\n                \"from\": {\n                    \"type\": \"string\",\n                    \"description\": \"Откуда\"\n                },\n                \"to\": {\n                    \"type\": \"string\"\n                },\n                \"passengers\": {\n                    \"type\": \"integer\",\n                    \"description\": \"Сколько человек\"\n                },\n                \"class\": {\n                    \"type\": \"string\",\n                    \"enum\": [\n                        \"economy\",\n                        \"business\"\n                    ]\n                },\n                \"dates\": {\n                    \"type\": \"array\",\n                    \"items\": {\n                        \"type\": \"string\"\n                    }\n                },\n                \"filters\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"direct\": {\n                            \"type\": \"boolean\"\n                        },\n                        \"maxPrice\": {\n                            \"type\": \"number\"\n                        }\n                    },\n                    \"required\": [\n                        \"direct\"\n                    ]\n                }\n            },\n            \"required\": [\n                \"from\",\n                \"to\"\n            ]\n        }\n    }\n}\n\nНайди билеты<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
+  },
+  {
+   "name": "deepseek-r1: system + user",
+   "input": {
+    "family": "deepseek-r1",
+    "messages": [
+     {
+      "role": "system",
+      "content": "Ты полезный ассистент."
+     },
+     {
+      "role": "user",
+      "content": "Сколько будет 2+2?"
+     }
+    ]
+   },
+   "text": "<｜begin▁of▁sentence｜>Ты полезный ассистент.<｜User｜>Сколько будет 2+2?<｜Assistant｜><think>\n"
+  },
+  {
+   "name": "deepseek-r1: без generation prompt",
+   "input": {
+    "family": "deepseek-r1",
+    "messages": [
+     {
+      "role": "system",
+      "content": "Ты полезный ассистент."
+     },
+     {
+      "role": "user",
+      "content": "Сколько будет 2+2?"
+     }
+    ],
+    "addGenerationPrompt": false
+   },
+   "text": "<｜begin▁of▁sentence｜>Ты полезный ассистент.<｜User｜>Сколько будет 2+2?"
+  },
+  {
+   "name": "deepseek-r1: мысли вырезаются",
+   "input": {
+    "family": "deepseek-r1",
+    "messages": [
+     {
+      "role": "user",
+      "content": "Сколько будет 2+2?"
+     },
+     {
+      "role": "assistant",
+      "content": "<think>\nПросто.\n</think>\n\n4"
+     },
+     {
+      "role": "user",
+      "content": "А 3+3?"
+     }
+    ]
+   },
+   "text": "<｜begin▁of▁sentence｜><｜User｜>Сколько будет 2+2?<｜Assistant｜>\n\n4<｜end▁of▁sentence｜><｜User｜>А 3+3?<｜Assistant｜><think>\n"
+  },
+  {
+   "name": "deepseek-r1: инструменты",
+   "input": {
+    "family": "deepseek-r1",
+    "messages": [
+     {
+      "role": "system",
+      "content": "Ты полезный ассистент."
+     },
+     {
+      "role": "user",
+      "content": "Погода в Москве и Казани?"
+     },
+     {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+       {
+        "name": "get_weather",
+        "arguments": {
+         "city": "Москва"
+        }
+       },
+       {
+        "name": "get_weather",
+        "arguments": {
+         "city": "Казань"
+        }
+       }
+      ]
+     },
+     {
+      "role": "tool",
+      "content": "{\"temp_c\": -3}"
+     },
+     {
+      "role": "tool",
+      "content": "{\"temp_c\": 1}"
+     },
+     {
+      "role": "assistant",
+      "content": "Холодно."
+     },
+     {
+      "role": "user",
+      "content": "А завтра?"
+     },
+     {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+       {
+        "name": "get_weather",
+        "arguments": {
+         "city": "Москва"
+        }
+       }
+      ]
+     },
+     {
+      "role": "tool",
+      "content": "{\"temp_c\": -5}"
+     }
+    ]
+   },
+   "text": "<｜begin▁of▁sentence｜>Ты полезный ассистент.<｜User｜>Погода в Москве и Казани?<｜Assistant｜><｜tool▁calls▁begin｜><｜tool▁call▁begin｜>function<｜tool▁sep｜>get_weather\n```json\n{\"city\": \"Москва\"}\n```<｜tool▁call▁end｜>\n<｜tool▁call▁begin｜>function<｜tool▁sep｜>get_weather\n```json\n{\"city\": \"Казань\"}\n```<｜tool▁call▁end｜><｜tool▁calls▁end｜><｜end▁of▁sentence｜><｜tool▁outputs▁begin｜><｜tool▁output▁begin｜>{\"temp_c\": -3}<｜tool▁output▁end｜><｜tool▁output▁begin｜>{\"temp_c\": 1}<｜tool▁output▁end｜><｜tool▁outputs▁end｜>Холодно.<｜end▁of▁sentence｜><｜User｜>А завтра?\n<｜tool▁call▁begin｜>function<｜tool▁sep｜>get_weather\n```json\n{\"city\": \"Москва\"}\n```<｜tool▁call▁end｜><｜tool▁calls▁end｜><｜end▁of▁sentence｜><｜tool▁output▁begin｜>{\"temp_c\": -5}<｜tool▁output▁end｜><｜tool▁outputs▁end｜>"
+  },
+  {
+   "name": "gpt-oss: system + user",
+   "input": {
+    "family": "gpt-oss",
+    "messages": [
+     {
+      "role": "system",
+      "content": "Ты полезный ассистент."
+     },
+     {
+      "role": "user",
+      "content": "Сколько будет 2+2?"
+     }
+    ]
+   },
+   "text": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-11-12\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>developer<|message|># Instructions\n\nТы полезный ассистент.\n\n<|end|><|start|>user<|message|>Сколько будет 2+2?<|end|><|start|>assistant"
+  },
+  {
+   "name": "gpt-oss: tools, вызов и ответ",
+   "input": {
+    "family": "gpt-oss",
+    "messages": [
+     {
+      "role": "system",
+      "content": "Ты полезный ассистент."
+     },
+     {
+      "role": "user",
+      "content": "Какая погода в Москве?"
+     },
+     {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+       {
+        "id": "call_1",
+        "name": "get_weather",
+        "arguments": {
+         "city": "Москва"
+        }
+       }
+      ]
+     },
+     {
+      "role": "tool",
+      "tool_call_id": "call_1",
+      "content": "{\"temp_c\": -3, \"sky\": \"снег\"}"
+     }
+    ],
+    "tools": [
+     {
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "description": "Получить текущую погоду в городе",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "city": {
+          "type": "string",
+          "description": "Название города"
+         }
+        },
+        "required": [
+         "city"
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "text": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-11-12\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.\nCalls to these tools must go to the commentary channel: 'functions'.<|end|><|start|>developer<|message|># Instructions\n\nТы полезный ассистент.\n\n# Tools\n\n## functions\n\nnamespace functions {\n\n// Получить текущую погоду в городе\ntype get_weather = (_: {\n// Название города\ncity: string,\n}) => any;\n\n} // namespace functions<|end|><|start|>user<|message|>Какая погода в Москве?<|end|><|start|>assistant to=functions.get_weather<|channel|>commentary json<|message|>{\"city\": \"Москва\"}<|call|><|start|>functions.get_weather to=assistant<|channel|>commentary<|message|>\"{\\\"temp_c\\\": -3, \\\"sky\\\": \\\"снег\\\"}\"<|end|><|start|>assistant"
+  },
+  {
+   "name": "gpt-oss: без system, reasoning low",
+   "input": {
+    "family": "gpt-oss",
+    "messages": [
+     {
+      "role": "user",
+      "content": "Сколько будет 2+2?"
+     }
+    ],
+    "enableThinking": false
+   },
+   "text": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-11-12\n\nReasoning: low\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>Сколько будет 2+2?<|end|><|start|>assistant"
+  },
+  {
+   "name": "gpt-oss: история с мыслями и финал без generation prompt",
+   "input": {
+    "family": "gpt-oss",
+    "messages": [
+     {
+      "role": "user",
+      "content": "Сколько будет 2+2?"
+     },
+     {
+      "role": "assistant",
+      "content": "4",
+      "reasoning": "Простое сложение."
+     },
+     {
+      "role": "user",
+      "content": "А 3+3?"
+     },
+     {
+      "role": "assistant",
+      "content": "6",
+      "reasoning": "Тоже просто."
+     }
+    ],
+    "addGenerationPrompt": false
+   },
+   "text": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-11-12\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>user<|message|>Сколько будет 2+2?<|end|><|start|>assistant<|channel|>final<|message|>4<|end|><|start|>user<|message|>А 3+3?<|end|><|start|>assistant<|channel|>analysis<|message|>Тоже просто.<|end|><|start|>assistant<|channel|>final<|message|>6<|return|>"
+  },
+  {
+   "name": "gpt-oss: сложная схема параметров",
+   "input": {
+    "family": "gpt-oss",
+    "messages": [
+     {
+      "role": "user",
+      "content": "Найди билеты"
+     },
+     {
+      "role": "assistant",
+      "content": "",
+      "reasoning": "Вызову поиск.",
+      "tool_calls": [
+       {
+        "name": "search_flights",
+        "arguments": {
+         "from": "MOW",
+         "to": "KZN"
+        }
+       }
+      ]
+     },
+     {
+      "role": "tool",
+      "content": "[]"
+     }
+    ],
+    "tools": [
+     {
+      "type": "function",
+      "function": {
+       "name": "get_weather",
+       "description": "Получить текущую погоду в городе",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "city": {
+          "type": "string",
+          "description": "Название города"
+         }
+        },
+        "required": [
+         "city"
+        ]
+       }
+      }
+     },
+     {
+      "type": "function",
+      "function": {
+       "name": "search_flights",
+       "description": "Найти авиабилеты",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "from": {
+          "type": "string",
+          "description": "Откуда"
+         },
+         "to": {
+          "type": "string"
+         },
+         "passengers": {
+          "type": "integer",
+          "description": "Сколько человек"
+         },
+         "class": {
+          "type": "string",
+          "enum": [
+           "economy",
+           "business"
+          ]
+         },
+         "dates": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         },
+         "filters": {
+          "type": "object",
+          "properties": {
+           "direct": {
+            "type": "boolean"
+           },
+           "maxPrice": {
+            "type": "number"
+           }
+          },
+          "required": [
+           "direct"
+          ]
+         }
+        },
+        "required": [
+         "from",
+         "to"
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "text": "<|start|>system<|message|>You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2024-06\nCurrent date: 2026-11-12\n\nReasoning: medium\n\n# Valid channels: analysis, commentary, final. Channel must be included for every message.\nCalls to these tools must go to the commentary channel: 'functions'.<|end|><|start|>developer<|message|># Tools\n\n## functions\n\nnamespace functions {\n\n// Получить текущую погоду в городе\ntype get_weather = (_: {\n// Название города\ncity: string,\n}) => any;\n\n// Найти авиабилеты\ntype search_flights = (_: {\n// Откуда\nfrom: string,\nto: string,\n// Сколько человек\npassengers?: number,\nclass?: \"economy\" | \"business\",\ndates?: string[],\nfilters?: {\ndirect: \n                boolean, maxPrice?: \n                number},\n}) => any;\n\n} // namespace functions<|end|><|start|>user<|message|>Найди билеты<|end|><|start|>assistant<|channel|>analysis<|message|>Вызову поиск.<|end|><|start|>assistant to=functions.search_flights<|channel|>commentary json<|message|>{\"from\": \"MOW\", \"to\": \"KZN\"}<|call|><|start|>functions.search_flights to=assistant<|channel|>commentary<|message|>\"[]\"<|end|><|start|>assistant"
+  }
+ ]
+}
